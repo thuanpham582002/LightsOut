@@ -6,6 +6,7 @@
       "size" : "16x16"
     },
     {
+      "filename" : "image-removebg-preview 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
@@ -41,6 +42,7 @@
       "size" : "256x256"
     },
     {
+      "filename" : "image-removebg-preview.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"

@@ -1,17 +1,21 @@
-//
-//  LightsOutApp.swift
-//  LightsOut
-//
-//  Created by Alon Natapov on 26/11/2024.
-//
-
 import SwiftUI
+import CoreGraphics
+import AppKit
 
 @main
-struct LightsOutApp: App {
+struct BlackOutApp: App {
+    @StateObject private var viewModel = DisplaysViewModel()
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        MenuBarExtra("LightsOut", systemImage: "display") {
+            MenuBarView()
+                .environmentObject(viewModel)
         }
+        .menuBarExtraStyle(.window)
     }
+}
+
+#Preview {
+    MenuBarView()
+        .environmentObject(DisplaysViewModel())
 }
