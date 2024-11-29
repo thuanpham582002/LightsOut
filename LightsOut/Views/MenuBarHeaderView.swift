@@ -1,9 +1,7 @@
 //
 //  MenuBarHeaderView.swift
 //  BlackoutTest
-//
-//  Created by Alon Natapov on 26/11/2024.
-//
+
 import SwiftUI
 
 let texts = ["Darker then Terry A. Davis's humor.",

@@ -6,43 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXContainerItemProxy section */
-		F9C24CC12CF67885004094EC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9C24CA72CF67884004094EC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F9C24CAE2CF67884004094EC;
-			remoteInfo = LightsOut;
-		};
-		F9C24CCB2CF67885004094EC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9C24CA72CF67884004094EC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F9C24CAE2CF67884004094EC;
-			remoteInfo = LightsOut;
-		};
-/* End PBXContainerItemProxy section */
+/* Begin PBXBuildFile section */
+		F98E00782CFA08FD00A25515 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F98E00772CFA08FD00A25515 /* LaunchAtLogin */; };
+/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F9C24CAF2CF67884004094EC /* LightsOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LightsOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F9C24CC02CF67885004094EC /* LightsOutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LightsOutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F9C24CCA2CF67885004094EC /* LightsOutUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LightsOutUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F9C24CB12CF67884004094EC /* LightsOut */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = LightsOut;
-			sourceTree = "<group>";
-		};
-		F9C24CC32CF67885004094EC /* LightsOutTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LightsOutTests;
-			sourceTree = "<group>";
-		};
-		F9C24CCD2CF67885004094EC /* LightsOutUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LightsOutUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -52,20 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F9C24CBD2CF67885004094EC /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F9C24CC72CF67885004094EC /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				F98E00782CFA08FD00A25515 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +38,6 @@
 			isa = PBXGroup;
 			children = (
 				F9C24CB12CF67884004094EC /* LightsOut */,
-				F9C24CC32CF67885004094EC /* LightsOutTests */,
-				F9C24CCD2CF67885004094EC /* LightsOutUITests */,
 				F9C24CB02CF67884004094EC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,8 +46,6 @@
 			isa = PBXGroup;
 			children = (
 				F9C24CAF2CF67884004094EC /* LightsOut.app */,
-				F9C24CC02CF67885004094EC /* LightsOutTests.xctest */,
-				F9C24CCA2CF67885004094EC /* LightsOutUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -112,56 +70,11 @@
 			);
 			name = LightsOut;
 			packageProductDependencies = (
+				F98E00772CFA08FD00A25515 /* LaunchAtLogin */,
 			);
 			productName = LightsOut;
 			productReference = F9C24CAF2CF67884004094EC /* LightsOut.app */;
 			productType = "com.apple.product-type.application";
-		};
-		F9C24CBF2CF67885004094EC /* LightsOutTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F9C24CD72CF67885004094EC /* Build configuration list for PBXNativeTarget "LightsOutTests" */;
-			buildPhases = (
-				F9C24CBC2CF67885004094EC /* Sources */,
-				F9C24CBD2CF67885004094EC /* Frameworks */,
-				F9C24CBE2CF67885004094EC /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F9C24CC22CF67885004094EC /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				F9C24CC32CF67885004094EC /* LightsOutTests */,
-			);
-			name = LightsOutTests;
-			packageProductDependencies = (
-			);
-			productName = LightsOutTests;
-			productReference = F9C24CC02CF67885004094EC /* LightsOutTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		F9C24CC92CF67885004094EC /* LightsOutUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F9C24CDA2CF67885004094EC /* Build configuration list for PBXNativeTarget "LightsOutUITests" */;
-			buildPhases = (
-				F9C24CC62CF67885004094EC /* Sources */,
-				F9C24CC72CF67885004094EC /* Frameworks */,
-				F9C24CC82CF67885004094EC /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F9C24CCC2CF67885004094EC /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				F9C24CCD2CF67885004094EC /* LightsOutUITests */,
-			);
-			name = LightsOutUITests;
-			packageProductDependencies = (
-			);
-			productName = LightsOutUITests;
-			productReference = F9C24CCA2CF67885004094EC /* LightsOutUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -175,14 +88,7 @@
 				TargetAttributes = {
 					F9C24CAE2CF67884004094EC = {
 						CreatedOnToolsVersion = 16.1;
-					};
-					F9C24CBF2CF67885004094EC = {
-						CreatedOnToolsVersion = 16.1;
-						TestTargetID = F9C24CAE2CF67884004094EC;
-					};
-					F9C24CC92CF67885004094EC = {
-						CreatedOnToolsVersion = 16.1;
-						TestTargetID = F9C24CAE2CF67884004094EC;
+						LastSwiftMigration = 1610;
 					};
 				};
 			};
@@ -195,34 +101,21 @@
 			);
 			mainGroup = F9C24CA62CF67884004094EC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F9C24CB02CF67884004094EC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				F9C24CAE2CF67884004094EC /* LightsOut */,
-				F9C24CBF2CF67885004094EC /* LightsOutTests */,
-				F9C24CC92CF67885004094EC /* LightsOutUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		F9C24CAD2CF67884004094EC /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F9C24CBE2CF67885004094EC /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F9C24CC82CF67885004094EC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -239,34 +132,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F9C24CBC2CF67885004094EC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F9C24CC62CF67885004094EC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F9C24CC22CF67885004094EC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F9C24CAE2CF67884004094EC /* LightsOut */;
-			targetProxy = F9C24CC12CF67885004094EC /* PBXContainerItemProxy */;
-		};
-		F9C24CCC2CF67885004094EC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F9C24CAE2CF67884004094EC /* LightsOut */;
-			targetProxy = F9C24CCB2CF67885004094EC /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		F9C24CD22CF67885004094EC /* Debug */ = {
@@ -392,6 +258,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LightsOut/LightsOut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -410,6 +277,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Steelworks.LightsOut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -419,6 +287,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LightsOut/LightsOut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -438,74 +307,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		F9C24CD82CF67885004094EC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W77DXU4YUN;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Steelworks.LightsOutTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LightsOut.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LightsOut";
-			};
-			name = Debug;
-		};
-		F9C24CD92CF67885004094EC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W77DXU4YUN;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Steelworks.LightsOutTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LightsOut.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LightsOut";
-			};
-			name = Release;
-		};
-		F9C24CDB2CF67885004094EC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W77DXU4YUN;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Steelworks.LightsOutUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = LightsOut;
-			};
-			name = Debug;
-		};
-		F9C24CDC2CF67885004094EC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W77DXU4YUN;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Steelworks.LightsOutUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = LightsOut;
 			};
 			name = Release;
 		};
@@ -530,25 +331,26 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F9C24CD72CF67885004094EC /* Build configuration list for PBXNativeTarget "LightsOutTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F9C24CD82CF67885004094EC /* Debug */,
-				F9C24CD92CF67885004094EC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F9C24CDA2CF67885004094EC /* Build configuration list for PBXNativeTarget "LightsOutUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F9C24CDB2CF67885004094EC /* Debug */,
-				F9C24CDC2CF67885004094EC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F98E00772CFA08FD00A25515 /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
+			productName = LaunchAtLogin;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F9C24CA72CF67884004094EC /* Project object */;
 }

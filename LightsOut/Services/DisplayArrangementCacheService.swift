@@ -1,9 +1,7 @@
 //
 //  DisplayArrangementCacheService.swift
 //  BlackoutTest
-//
-//  Created by Alon Natapov on 26/11/2024.
-//
+
 import CoreGraphics
 import SwiftUI
 

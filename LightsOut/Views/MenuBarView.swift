@@ -1,17 +1,17 @@
 //
 //  MenuBarView.swift
 //  BlackoutTest
-//
-//  Created by Alon Natapov on 26/11/2024.
-//
+
 import SwiftUI
+import LaunchAtLogin
 
 struct MenuBarView: View {
     @EnvironmentObject var viewModel: DisplaysViewModel
     @State private var isLoading: Bool = false
     @State private var isSpinning: Bool = false
     @State private var cachedHeight: CGFloat = 200
-
+    @AppStorage("ShowStartupPrompt") private var showStartupPrompt: Bool = true
+    
     var body: some View {
         ZStack {
             if isLoading {
@@ -29,7 +29,23 @@ struct MenuBarView: View {
                     )
                     .cornerRadius(8)
             }
+            // Custom Alert Overlay
+            if showStartupPrompt {
+                CustomAlertView(
+                    title: "Enable Launch at Login",
+                    message: "Would you like this app to launch automatically when you log in?",
+                    primaryButton: ("Yes", {
+                        showStartupPrompt = false
+                        LaunchAtLogin.isEnabled = true
+                    }),
+                    secondaryButton: ("No", {
+                        showStartupPrompt = false
+                        LaunchAtLogin.isEnabled = false
+                    })
+                )
+            }
         }
+        
         .animation(.snappy, value: isLoading)
     }
 }

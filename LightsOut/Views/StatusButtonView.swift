@@ -1,9 +1,6 @@
 //
 //  DisplayStatusButtonView.swift
 //  BlackoutTest
-//
-//  Created by Alon Natapov on 26/11/2024.
-//
 
 import SwiftUI
 
