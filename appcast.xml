@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>LightsOut</title>
+        <item>
+            <title>0.9</title>
+            <pubDate>Sun, 01 Dec 2024 23:57:30 +0200</pubDate>
+            <sparkle:version>0.9</sparkle:version>
+            <sparkle:shortVersionString>0.9</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.1</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/AlonX2/LightsOut/releases/download/v0.9/LightsOut0-9.dmg" length="1034633" type="application/octet-stream" sparkle:edSignature="lktZrMkcL2PmuAAx0Cz1fWEZXmYf4+urDqGLZIDzoagS59OqDRHvsiytTkuI1acL0ZdIk5F4iEZqz/68a0xaDQ=="/>
+        </item>
+    </channel>
+</rss>
