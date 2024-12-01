@@ -288,7 +288,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LightsOut/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "https://alonx2.github.io/LightsOut/appcast.xml";
-				INFOPLIST_KEY_LSBackgroundOnly = NO;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -321,7 +321,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LightsOut/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "https://alonx2.github.io/LightsOut/appcast.xml";
-				INFOPLIST_KEY_LSBackgroundOnly = NO;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
