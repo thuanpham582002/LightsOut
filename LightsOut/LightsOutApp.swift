@@ -1,13 +1,14 @@
 import SwiftUI
 import CoreGraphics
 import AppKit
+import Sparkle
 
 @main
-struct BlackOutApp: App {
+struct LightsOutApp: App {
     @StateObject private var viewModel = DisplaysViewModel()
-
+    
     var body: some Scene {
-        MenuBarExtra("LightsOut", systemImage: "display") {
+        MenuBarExtra("LightsOut", image: "MenubarIcon") {
             MenuBarView()
                 .environmentObject(viewModel)
         }
