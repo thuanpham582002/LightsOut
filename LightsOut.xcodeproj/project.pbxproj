@@ -8,15 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		F98E00782CFA08FD00A25515 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F98E00772CFA08FD00A25515 /* LaunchAtLogin */; };
+		F98E007E2CFA1D6200A25515 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F98E007D2CFA1D6200A25515 /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F9C24CAF2CF67884004094EC /* LightsOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LightsOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F98E00812CFA276200A25515 /* Exceptions for "LightsOut" folder in "LightsOut" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F9C24CAE2CF67884004094EC /* LightsOut */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F9C24CB12CF67884004094EC /* LightsOut */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F98E00812CFA276200A25515 /* Exceptions for "LightsOut" folder in "LightsOut" target */,
+			);
 			path = LightsOut;
 			sourceTree = "<group>";
 		};
@@ -28,6 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F98E00782CFA08FD00A25515 /* LaunchAtLogin in Frameworks */,
+				F98E007E2CFA1D6200A25515 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +86,7 @@
 			name = LightsOut;
 			packageProductDependencies = (
 				F98E00772CFA08FD00A25515 /* LaunchAtLogin */,
+				F98E007D2CFA1D6200A25515 /* Sparkle */,
 			);
 			productName = LightsOut;
 			productReference = F9C24CAF2CF67884004094EC /* LightsOut.app */;
@@ -103,6 +119,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
+				F98E007C2CFA1D6200A25515 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F9C24CB02CF67884004094EC /* Products */;
@@ -258,16 +275,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LightsOut/LightsOut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_ASSET_PATHS = "\"LightsOut/Preview Content\"";
 				DEVELOPMENT_TEAM = W77DXU4YUN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LightsOut/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "https://alonx2.github.io/LightsOut/appcast.xml";
+				INFOPLIST_KEY_LSBackgroundOnly = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -287,16 +308,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LightsOut/LightsOut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_ASSET_PATHS = "\"LightsOut/Preview Content\"";
 				DEVELOPMENT_TEAM = W77DXU4YUN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LightsOut/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "https://alonx2.github.io/LightsOut/appcast.xml";
+				INFOPLIST_KEY_LSBackgroundOnly = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -342,6 +367,14 @@
 				version = 1.1.0;
 			};
 		};
+		F98E007C2CFA1D6200A25515 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -349,6 +382,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
 			productName = LaunchAtLogin;
+		};
+		F98E007D2CFA1D6200A25515 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F98E007C2CFA1D6200A25515 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
