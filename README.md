@@ -8,6 +8,6 @@
 </div>
 <hr>
 <div align="center">
-  <h4>Well they do say a picture is worth a thousand words, and in this case leaves little room for more storytelling</h4>
+  <h4>Well they do say a picture is worth a thousand words, and in this case leaves little room for more storytelling:</h4>
   <img src="https://github.com/user-attachments/assets/97e0f575-d479-4cd9-80ac-345f952cabeb" alt="Very cool screenshot" align="center"/>
 </div>
