@@ -6,5 +6,5 @@
 <a href="https://github.com/AlonX2/LightsOut/releases/download/v1.0.3/LightsOut.dmg"><img src="https://user-images.githubusercontent.com/37590873/219133640-8b7a0179-20a7-4e02-8887-fbbd2eaad64b.png" width="180" alt="Download for macOS"/></a><br/>
 <sub><b>The <a href="https://github.com/AlonX2/LightsOut/releases/">latest app version</a> requires macOS Ventura, Sonoma or Sequoia.<br>
 </div>
-
-
+  
+![Screenshot 2024-12-02 at 18 06 16](https://github.com/user-attachments/assets/fa9b0649-2947-44ab-add4-cbff88c56aa0)
