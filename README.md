@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://github.com/waydabber/BetterDisplay/releases"><img src="https://github.com/user-attachments/assets/2007db73-5485-4296-9205-e9626ff3ac81" width="128" height="180" alt="LightsOut" align="center"/></a>
+<a href="https://github.com/waydabber/BetterDisplay/releases"><img src="https://github.com/user-attachments/assets/2007db73-5485-4296-9205-e9626ff3ac81" width="128" height="165" alt="LightsOut" align="center"/></a>
 
 <h2>LightsOut</h2>
 <p>**Forever free** menubar app to disable any monitor with a simple button press - No more disconneting cables to view items on another screen!</p>
