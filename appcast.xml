@@ -3,12 +3,12 @@
     <channel>
         <title>LightsOut</title>
         <item>
-            <title>2.0.1</title>
-            <pubDate>Mon, 02 Dec 2024 15:58:45 +0200</pubDate>
-            <sparkle:version>2.0.1</sparkle:version>
-            <sparkle:shortVersionString>2.0.1</sparkle:shortVersionString>
+            <title>1.0.3</title>
+            <pubDate>Mon, 02 Dec 2024 17:22:46 +0200</pubDate>
+            <sparkle:version>1.0.3</sparkle:version>
+            <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.1</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/AlonX2/LightsOut/releases/download/v1.0.1/LightsOut.dmg" length="1483610" type="application/octet-stream" sparkle:edSignature="EcVDS4thLO2R6PBW+VNkU0eu7OFNlV3stnsanjp8tcLMCqiJUqUPp029JMopuUhc6f8sKEOELOBpljPL5NkXCw=="/>
+            <enclosure url="https://github.com/AlonX2/LightsOut/releases/download/v1.0.3/LightsOut.dmg" length="1483627" type="application/octet-stream" sparkle:edSignature="YU+Z1XZ4GPwbhOiuaMPZpr3PPXiI3AoFSLkmpDXHCUTGwucx1d50lYvtvRKvGdnI5XSy2ZoMs8mFesl89vKJBQ=="/>
         </item>
     </channel>
 </rss>
