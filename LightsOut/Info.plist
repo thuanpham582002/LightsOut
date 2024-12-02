@@ -4,10 +4,12 @@
 <dict>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
+	<key>SUEnableDownloaderService</key>
+	<true/>
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string></string>
+	<string>https://alonx2.github.io/LightsOut/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>/m/TNJxWeS/g2eXKGIST0oOxigLT3rNmYDvNL0lul7Y=</string>
 </dict>
