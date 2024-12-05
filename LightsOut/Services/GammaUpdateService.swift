@@ -7,21 +7,21 @@ import SwiftUI
 
 class GammaUpdateService {
     @Published var originalGammaTables: [CGDirectDisplayID: (red: [CGGammaValue], green: [CGGammaValue], blue: [CGGammaValue])] = [:]
-    private var gammaUpdateTimers: [CGDirectDisplayID: Timer] = [:]
+    private var gammaUpdateTimers: [DisplayInfo: Timer] = [:]
     
-    func setZeroGamma(for displayID: CGDirectDisplayID) {
-        saveOriginalGamma(for: displayID)
-        startGammaUpdateTimer(for: displayID)
+    func setZeroGamma(for display: DisplayInfo) {
+        saveOriginalGamma(for: display.id)
+        applyZeroGamma(for: display)
     }
     
-    func restoreGamma(for displayID: CGDirectDisplayID) {
-        gammaUpdateTimers[displayID]?.invalidate()
-        gammaUpdateTimers[displayID] = nil
+    func restoreGamma(for display: DisplayInfo) {
+        gammaUpdateTimers[display]?.invalidate()
+        gammaUpdateTimers[display] = nil
         
-        if let originalTables = originalGammaTables[displayID] {
-            CGSetDisplayTransferByTable(displayID, UInt32(originalTables.red.count), originalTables.red, originalTables.green, originalTables.blue)
+        if let originalTables = originalGammaTables[display.id] {
+            CGSetDisplayTransferByTable(display.id, UInt32(originalTables.red.count), originalTables.red, originalTables.green, originalTables.blue)
         } else {
-            print("No original gamma table saved for display \(displayID).")
+            print("No original gamma table saved for display \(display.name).")
         }
     }
     
@@ -37,34 +37,30 @@ class GammaUpdateService {
         }
     }
     
-    private func startGammaUpdateTimer(for displayID: CGDirectDisplayID) {
-        gammaUpdateTimers[displayID]?.invalidate()
-        
-        let timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
-            self?.applyZeroGamma(for: displayID)
-        }
-        gammaUpdateTimers[displayID] = timer
-    }
-    
-    private func applyZeroGamma(for displayID: CGDirectDisplayID) {
+    private func applyZeroGamma(for display: DisplayInfo) {
         let zeroTable = [CGGammaValue](repeating: 0, count: 256)
         var runs = 0
         
+        display.state = .pending
+        printmem(of: display)
+
+        print(display.state)
         let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-            let result = CGSetDisplayTransferByTable(displayID, 256, zeroTable, zeroTable, zeroTable)
+            let result = CGSetDisplayTransferByTable(display.id, 256, zeroTable, zeroTable, zeroTable)
             if result == .success {
-                print("Successfully applied zero gamma to display \(displayID) (application number \(runs + 1))")
+                print("Successfully applied zero gamma to display \(display.id) (application number \(runs + 1))")
             }
             
             runs += 1
             
             if runs >= 5 {
-                print("Applied zero gamma to display \(displayID) \(runs) times")
+                print("Applied zero gamma to display \(display.id) \(runs) times")
                 timer.invalidate()
-                self?.gammaUpdateTimers[displayID] = nil
+                self?.gammaUpdateTimers[display] = nil
+                display.state = .softDisabled
             }
         }
         
-        gammaUpdateTimers[displayID] = timer
+        gammaUpdateTimers[display] = timer
     }
 }

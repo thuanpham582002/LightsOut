@@ -6,16 +6,40 @@
 import SwiftUI
 import CoreGraphics
 
-class DisplayInfo: ObservableObject, Identifiable {
+enum DisplayState {
+    case softDisabled
+    case hardDisabled
+    case pending
+    case active
+    
+    func isEnabled() -> Bool {
+        switch self {
+        case .softDisabled, .hardDisabled:
+            return false
+        default:
+            return true
+        }
+    }
+}
+
+class DisplayInfo: ObservableObject, Identifiable, Hashable {
     let id: CGDirectDisplayID
     let name: String
-    @Published var isBlackedOut: Bool = false
+    @Published var state: DisplayState
     let isPrimary: Bool
 
-    init(id: CGDirectDisplayID, name: String, isBlackedOut: Bool, isPrimary: Bool) {
+    init(id: CGDirectDisplayID, name: String, state: DisplayState, isPrimary: Bool) {
         self.id = id
         self.name = name
-        self.isBlackedOut = isBlackedOut
+        self.state = state
         self.isPrimary = isPrimary
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: DisplayInfo, rhs: DisplayInfo) -> Bool {
+        return lhs.id == rhs.id
     }
 }

@@ -5,6 +5,9 @@
 import CoreGraphics
 import SwiftUI
 
+@_silgen_name("CGSConfigureDisplayEnabled")
+func CGSConfigureDisplayEnabled(_ cid: CGDisplayConfigRef, _ display: UInt32, _ enabled: Bool) -> Int
+
 class DisplaysViewModel: ObservableObject {
     @Published var displays: [DisplayInfo] = []
     private var gammaService = GammaUpdateService()
@@ -32,41 +35,65 @@ class DisplaysViewModel: ObservableObject {
             return DisplayInfo(
                 id: displayID,
                 name: displayName,
-                isBlackedOut: false,
+                state: .active,
                 isPrimary: displayID == primaryDisplayID
             )
         }
     }
     
-    func blackOutDisplay(displayID: CGDirectDisplayID) {
+    func hardDisableDisplay(displayID: CGDirectDisplayID) {
+        var cid: CGDisplayConfigRef?
+        CGBeginDisplayConfiguration(&cid)
+        
+        let status = CGSConfigureDisplayEnabled(cid!, displayID, false)
+        
+        print(status)
+        
+        CGCompleteDisplayConfiguration(cid, CGConfigureOption.forAppOnly)
+    }
+    
+    func hardEnableDisplay(displayID: CGDirectDisplayID) {
+        var cid: CGDisplayConfigRef?
+        CGBeginDisplayConfiguration(&cid)
+        
+        let status = CGSConfigureDisplayEnabled(cid!, displayID, true)
+        
+        print(status)
+        
+        CGCompleteDisplayConfiguration(cid, CGConfigureOption.forAppOnly)
+    }
+    
+    func softDisableDisplay(display: DisplayInfo) {
         do {
             try arrengementCache.cache()
-            try mirrorDisplay(targetDisplayID: displayID)
-            print("Mirrored display \(displayID)!")
-            gammaService.setZeroGamma(for: displayID)
+            try mirrorDisplay(targetDisplayID: display.id)
+            print("Mirrored display \(display.name)!")
+            gammaService.setZeroGamma(for: display)
         } catch {
             print("Failed to mirror display: \(error.localizedDescription)")
         }
     }
     
-    func unblackOutDisplay(displayID: CGDirectDisplayID) {
-        gammaService.restoreGamma(for: displayID)
+    func unSoftDisableDisplay(display: DisplayInfo) {
+        gammaService.restoreGamma(for: display)
         
         do {
-            try unmirrorDisplay(displayID)
+            try unmirrorDisplay(display.id)
             try arrengementCache.restore()
             print("Unmirrored display!")
         } catch {
             print("Failed to unmirror display: \(error.localizedDescription)")
         }
+        
+        display.state = .active
     }
     
     func resetAllDisplays() {
         for display in displays {
-            unblackOutDisplay(displayID: display.id)
-            display.isBlackedOut = false
+            unSoftDisableDisplay(display: display)
         }
         CGDisplayRestoreColorSyncSettings()
+        CGRestorePermanentDisplayConfiguration()
     }
 }
 

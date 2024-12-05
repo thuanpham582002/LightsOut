@@ -5,47 +5,87 @@
 import SwiftUI
 
 struct StatusButton: View {
-    @Binding var isPending: Bool
-    @Binding var pendingAnimationOpacity: Double
+    @ObservedObject var display: DisplayInfo
+    @FocusState private var isFocused: Bool
+    @State private var isShifted: Bool = false
+    var body: some View {
+        SoftButton(display: display)
+    }
+
+}
+
+func printmem(of object: AnyObject) {
+    let address = Unmanaged.passUnretained(object).toOpaque()
+    print("Memory address: \(address)")
+}
+
+struct HardButton: View {
     @ObservedObject var display: DisplayInfo
     @EnvironmentObject var viewModel: DisplaysViewModel
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 6)
-                .fill(isPending ? Color("AppBlue") : (display.isBlackedOut ? Color("AppRed") : Color("EnabledButton")))
+                .fill(display.state == .pending ? Color("AppBlue") : (!display.state.isEnabled() ? Color("AppRed") : Color("EnabledButton")))
                 .frame(width: 90, height: 32)
 
-            if isPending {
+            if display.state == .pending {
                 Text("Pending")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
-                    .opacity(pendingAnimationOpacity)
-                    .onAppear {
-                        withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
-                            pendingAnimationOpacity = 0.3
-                        }
-                    }
+                    .opacity(0.3)
+
             } else {
-                Text(display.isBlackedOut ? "Disabled" : "Active")
+                Text(!display.state.isEnabled() ? "Disabled" : "Active")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
             }
         }
         .onTapGesture {
-            if isPending { return }
+            if display.state == .pending { return }
 
-            if display.isBlackedOut {
-                display.isBlackedOut.toggle()
-                viewModel.unblackOutDisplay(displayID: display.id)
+            if !display.state.isEnabled() {
+                viewModel.unSoftDisableDisplay(display: display)
             } else {
-                isPending = true
-                viewModel.blackOutDisplay(displayID: display.id)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    display.isBlackedOut.toggle()
-                    isPending = false
-                    pendingAnimationOpacity = 1.0
-                }
+                viewModel.softDisableDisplay(display: display)
+            }
+        }
+    }
+}
+
+struct SoftButton: View {
+    @ObservedObject var display: DisplayInfo
+    @EnvironmentObject var viewModel: DisplaysViewModel
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 6)
+                .fill(display.state == .pending ? Color("AppBlue") : (!display.state.isEnabled() ? Color("AppRed") : Color("EnabledButton")))
+                .frame(width: 90, height: 32)
+
+            if display.state == .pending {
+                Text("Pending")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .opacity(0.3)
+
+            } else {
+                Text(!display.state.isEnabled() ? "Disabled" : "Active")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+            }
+        }
+        .onTapGesture {
+            printmem(of: display)
+            if display.state == .pending { return }
+
+            if !display.state.isEnabled() {
+                viewModel.unSoftDisableDisplay(display: display)
+                print("dis: \(display.state)")
+            } else {
+                viewModel.softDisableDisplay(display: display)
+                print("dis: \(display.state)")
+
             }
         }
     }
