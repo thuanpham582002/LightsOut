@@ -22,11 +22,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var popover: NSPopover!
     var eventMonitor: Any?
     let displaysViewModel = DisplaysViewModel()
-
+    var updateController: SPUStandardUpdaterController!
+    var contextMenuManager: ContextMenuManager!
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
         popover = NSPopover()
         popover.behavior = .applicationDefined
-
+        
         // Set up the status item
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
@@ -40,12 +42,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self?.popover.performClose(nil)
             }
         }
+        
+        updateController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        
+        if updateController.updater.automaticallyChecksForUpdates {
+            updateController.updater.checkForUpdatesInBackground()
+        }
+        
+        contextMenuManager = ContextMenuManager(updateController: updateController.updater, statusItem: statusItem)
     }
 
     @objc func handleClick(_ sender: NSStatusBarButton) {
         guard let event = NSApp.currentEvent else { return }
         if event.type == .rightMouseUp {
-            showContextMenu()
+            contextMenuManager.showContextMenu()
         } else {
             togglePopover(sender)
         }
@@ -55,27 +65,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if popover.isShown {
             popover.performClose(sender)
         } else {
-            // Reuse the existing view model instance
             let contentView = MenuBarView().environmentObject(displaysViewModel)
             popover.contentViewController = NSHostingController(rootView: contentView)
 
             if let button = statusItem.button {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+                
+                // Ensure the app and popover window become active
                 NSApp.activate(ignoringOtherApps: true)
+                popover.contentViewController?.view.window?.makeKeyAndOrderFront(nil)
+                popover.contentViewController?.view.window?.makeFirstResponder(popover.contentViewController?.view)
             }
         }
-    }
-
-    func showContextMenu() {
-        let menu = NSMenu()
-        menu.addItem(NSMenuItem(
-            title: "Quit LightsOut",
-            action: #selector(NSApplication.terminate(_:)),
-            keyEquivalent: "q"
-        ))
-        statusItem.menu = menu
-        statusItem.button?.performClick(nil)
-        statusItem.menu = nil
     }
 
     deinit {
