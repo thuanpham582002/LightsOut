@@ -2,8 +2,9 @@
 //  DisplayListView.swift
 //  BlackoutTest
 
-
+import Foundation
 import SwiftUI
+import CoreGraphics
 
 struct DisplayListView: View {
     @EnvironmentObject var viewModel: DisplaysViewModel
@@ -38,10 +39,9 @@ struct DisplayControlView: View {
                 DisplayDetails(display: display)
                 Spacer()
                 StatusButton(
-                    isPending: $isPending,
-                    pendingAnimationOpacity: $pendingAnimationOpacity,
                     display: display
                 )
+                .withErrorHandling()
             }
         }
         .padding(12)

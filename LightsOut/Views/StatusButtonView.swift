@@ -1,54 +1,103 @@
-//
-//  DisplayStatusButtonView.swift
-//  BlackoutTest
-
 import SwiftUI
 
 struct StatusButton: View {
-    @Binding var isPending: Bool
-    @Binding var pendingAnimationOpacity: Double
     @ObservedObject var display: DisplayInfo
     @EnvironmentObject var viewModel: DisplaysViewModel
-
+    @EnvironmentObject var errorHandler: ErrorHandler
+    
+    @State private var isAnimating = false
+    private var statusText: String {
+        switch display.state {
+        case .mirrored:
+            return "Mirrored"
+        case .disconnected:
+            return "Disabled"
+        case .active:
+            return "Active"
+        case .pending:
+            return "Pending"
+        }
+    }
+    
+    private var statusColor: Color {
+        switch display.state {
+        case .mirrored:
+            return Color("AppRed-Bright")
+        case .disconnected:
+            return Color("AppRed")
+        case .active:
+            return Color("AppGreen")
+        case .pending:
+            return Color("AppBlue")
+        }
+    }
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 6)
-                .fill(isPending ? Color("AppBlue") : (display.isBlackedOut ? Color("AppRed") : Color("EnabledButton")))
+                .fill(statusColor)
                 .frame(width: 90, height: 32)
 
-            if isPending {
+            if display.state == .pending {
                 Text("Pending")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
-                    .opacity(pendingAnimationOpacity)
+                    .foregroundColor(isAnimating ? .white : .gray)
                     .onAppear {
                         withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
-                            pendingAnimationOpacity = 0.3
+                            isAnimating.toggle()
                         }
                     }
             } else {
-                Text(display.isBlackedOut ? "Disabled" : "Active")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
+                Text(statusText)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
             }
         }
         .onTapGesture {
-            if isPending { return }
+            if display.state == .pending { return }
 
-            if display.isBlackedOut {
-                display.isBlackedOut.toggle()
-                viewModel.unblackOutDisplay(displayID: display.id)
+            // Check if the Shift key is pressed
+            let shiftPressed = NSEvent.modifierFlags.contains(.shift)
+
+            if shiftPressed {
+                handleShiftTap()
             } else {
-                isPending = true
-                viewModel.blackOutDisplay(displayID: display.id)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    display.isBlackedOut.toggle()
-                    isPending = false
-                    pendingAnimationOpacity = 1.0
-                }
+                handleTap()
+            }
+        }
+    }
+
+    private func handleTap() {
+        do {
+            if display.state.isOff() {
+                try viewModel.turnOnDisplay(display: display)
+            } else {
+                try viewModel.disconnectDisplay(display: display)
+            }
+        } catch let error {
+            errorHandler.handle(error: error) {
+                viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
+                viewModel.resetAllDisplays()
+                viewModel.fetchDisplays()
+            }
+        }
+        
+
+    }
+
+    private func handleShiftTap() {
+        do {
+            if display.state.isOff() {
+                try viewModel.turnOnDisplay(display: display)
+            } else {
+                try viewModel.disableDisplay(display: display)
+            }
+        } catch let error {
+            errorHandler.handle(error: error) {
+                viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
+                viewModel.resetAllDisplays()
+                viewModel.fetchDisplays()
             }
         }
     }
 }
-
-
