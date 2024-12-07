@@ -7,6 +7,7 @@ import SwiftUI
 
 struct LoadingView: View {
     @Binding var cachedHeight: CGFloat
+    @Binding var cachedWidth: CGFloat
     @Binding var isSpinning: Bool
 
     var body: some View {
@@ -26,7 +27,7 @@ struct LoadingView: View {
                 .foregroundColor(.white)
             Spacer()
         }
-        .frame(width: 300, height: cachedHeight)
+        .frame(width: cachedWidth, height: cachedHeight)
         .background(Color.blue)
         .cornerRadius(8)
     }

@@ -7,17 +7,17 @@ import SwiftUI
 import CoreGraphics
 
 enum DisplayState {
-    case softDisabled
-    case hardDisabled
+    case disabled
+    case disconnected
     case pending
     case active
     
-    func isEnabled() -> Bool {
+    func isOff() -> Bool {
         switch self {
-        case .softDisabled, .hardDisabled:
-            return false
-        default:
+        case .disabled, .disconnected:
             return true
+        default:
+            return false
         }
     }
 }
@@ -25,8 +25,12 @@ enum DisplayState {
 class DisplayInfo: ObservableObject, Identifiable, Hashable {
     let id: CGDirectDisplayID
     let name: String
-    @Published var state: DisplayState
     let isPrimary: Bool
+    @Published var state: DisplayState {
+        didSet {
+            print("Display '\(name)' changed state to '\(state)'")
+        }
+    }
 
     init(id: CGDirectDisplayID, name: String, state: DisplayState, isPrimary: Bool) {
         self.id = id

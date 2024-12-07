@@ -1,10 +1,6 @@
 import SwiftUI
-import CoreGraphics
 import AppKit
 import Sparkle
-
-import SwiftUI
-import AppKit
 
 @main
 struct LightsOutApp: App {
@@ -45,9 +41,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         updateController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
         
+        #if !DEBUG
         if updateController.updater.automaticallyChecksForUpdates {
             updateController.updater.checkForUpdatesInBackground()
         }
+        #endif
         
         contextMenuManager = ContextMenuManager(updateController: updateController.updater, statusItem: statusItem)
     }

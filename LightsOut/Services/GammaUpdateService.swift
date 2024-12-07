@@ -42,7 +42,6 @@ class GammaUpdateService {
         var runs = 0
         
         display.state = .pending
-        printmem(of: display)
 
         print(display.state)
         let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
@@ -57,7 +56,7 @@ class GammaUpdateService {
                 print("Applied zero gamma to display \(display.id) \(runs) times")
                 timer.invalidate()
                 self?.gammaUpdateTimers[display] = nil
-                display.state = .softDisabled
+                display.state = .disabled
             }
         }
         

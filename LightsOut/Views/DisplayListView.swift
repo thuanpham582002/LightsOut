@@ -41,6 +41,7 @@ struct DisplayControlView: View {
                 StatusButton(
                     display: display
                 )
+                .withErrorHandling()
             }
         }
         .padding(12)

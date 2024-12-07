@@ -21,13 +21,14 @@ class DisplaysViewModel: ObservableObject {
         print("Fetching displays.")
         var displayCount: UInt32 = 0
         CGGetActiveDisplayList(0, nil, &displayCount)
-        let allocated = Int(displayCount)
-        var activeDisplays = [CGDirectDisplayID](repeating: 0, count: allocated)
+        var activeDisplays = [CGDirectDisplayID](repeating: 0, count: Int(displayCount))
         CGGetActiveDisplayList(displayCount, &activeDisplays, &displayCount)
+        
+        var new_displays: Set<DisplayInfo> = Set()
         
         let primaryDisplayID = CGMainDisplayID()
         
-        displays = activeDisplays.compactMap { displayID in
+        new_displays = Set(activeDisplays.compactMap { displayID in
             var displayName = "Display \(displayID)"
             if let screen = NSScreen.screens.first(where: { $0.displayID == displayID }) {
                 displayName = screen.localizedName
@@ -38,62 +39,126 @@ class DisplaysViewModel: ObservableObject {
                 state: .active,
                 isPrimary: displayID == primaryDisplayID
             )
+        })
+        
+        // Ensuring the off/pending displays are not "deleted" - manually adding them to the new list.
+        for display in displays {
+            if display.state.isOff() || display.state == .pending {
+                new_displays.insert(display)
+            }
+        }
+        
+        displays = Array(new_displays)
+        
+        displays.sort {
+            if $0.isPrimary {
+                return true
+            }
+            if $1.isPrimary {
+                return false
+            }
+            return $0.id < $1.id
         }
     }
     
-    func hardDisableDisplay(displayID: CGDirectDisplayID) {
+    func disconnectDisplay(display: DisplayInfo) throws(DisplayError) {
+        display.state = .pending
         var cid: CGDisplayConfigRef?
-        CGBeginDisplayConfiguration(&cid)
+        let beginStatus = CGBeginDisplayConfiguration(&cid)
+        guard beginStatus == .success, let config = cid else {
+            throw DisplayError(msg: "Failed to begin configuring '\(display.name)'.")
+        }
         
-        let status = CGSConfigureDisplayEnabled(cid!, displayID, false)
+        let status = CGSConfigureDisplayEnabled(config, display.id, false)
+        guard status == 0 else {
+            CGCancelDisplayConfiguration(config)
+            throw DisplayError(msg: "Failed to disconnect '\(display.name)'.")
+        }
         
-        print(status)
+        let completeStatus = CGCompleteDisplayConfiguration(config, .forAppOnly)
+        guard completeStatus == .success else {
+            throw DisplayError(msg: "Failed to finish configuring '\(display.name)'.")
+        }
         
-        CGCompleteDisplayConfiguration(cid, CGConfigureOption.forAppOnly)
+        display.state = .disconnected
     }
+
     
-    func hardEnableDisplay(displayID: CGDirectDisplayID) {
-        var cid: CGDisplayConfigRef?
-        CGBeginDisplayConfiguration(&cid)
-        
-        let status = CGSConfigureDisplayEnabled(cid!, displayID, true)
-        
-        print(status)
-        
-        CGCompleteDisplayConfiguration(cid, CGConfigureOption.forAppOnly)
-    }
-    
-    func softDisableDisplay(display: DisplayInfo) {
+    func disableDisplay(display: DisplayInfo) throws(DisplayError) {
+        display.state = .pending
         do {
             try arrengementCache.cache()
             try mirrorDisplay(targetDisplayID: display.id)
             print("Mirrored display \(display.name)!")
             gammaService.setZeroGamma(for: display)
         } catch {
-            print("Failed to mirror display: \(error.localizedDescription)")
+            throw DisplayError(msg: "Faild to apply a mirror-based disable to '\(display.name)'.")
         }
     }
     
-    func unSoftDisableDisplay(display: DisplayInfo) {
-        gammaService.restoreGamma(for: display)
+    func turnOnDisplay(display: DisplayInfo) throws(DisplayError) {
+        switch display.state {
+        case .disconnected:
+            try reconnectDisplay(display: display)
+        case .disabled:
+            try enableDisplay(display: display)
+        default:
+            break
+        }
+    }
+    
+    func resetAllDisplays() {
+        for display in displays {
+            try? turnOnDisplay(display: display)
+        }
+        CGDisplayRestoreColorSyncSettings()
+        CGRestorePermanentDisplayConfiguration()
+    }
+}
+
+// MARK: - TurnOn logic
+
+extension DisplaysViewModel {
+    fileprivate func reconnectDisplay(display: DisplayInfo) throws(DisplayError) {
+        var cid: CGDisplayConfigRef?
+        let beginStatus = CGBeginDisplayConfiguration(&cid)
+        guard beginStatus == .success, let config = cid else {
+            throw DisplayError(
+                msg: "Failed to begin configuration for '\(display.name)'."
+            )
+        }
         
-        do {
-            try unmirrorDisplay(display.id)
-            try arrengementCache.restore()
-            print("Unmirrored display!")
-        } catch {
-            print("Failed to unmirror display: \(error.localizedDescription)")
+        let status = CGSConfigureDisplayEnabled(config, display.id, true)
+        guard status == 0 else {
+            CGCancelDisplayConfiguration(config)
+            throw DisplayError(
+                msg: "Failed to reconnect '\(display.name)'."
+            )
+        }
+        
+        let completeStatus = CGCompleteDisplayConfiguration(config, .forAppOnly)
+        guard completeStatus == .success else {
+            throw DisplayError(
+                msg: "Failed to complete configuration for '\(display.name)'.")
         }
         
         display.state = .active
     }
     
-    func resetAllDisplays() {
-        for display in displays {
-            unSoftDisableDisplay(display: display)
+    fileprivate func enableDisplay(display: DisplayInfo) throws(DisplayError) {
+        gammaService.restoreGamma(for: display)
+        
+        do {
+            try unmirrorDisplay(display.id)
+            try arrengementCache.restore()
+            print("Unmirrored display \(display.name)!")
+        } catch {
+            throw DisplayError(
+                msg: "Failed to enable '\(display.name)'."
+            )
         }
-        CGDisplayRestoreColorSyncSettings()
-        CGRestorePermanentDisplayConfiguration()
+        
+        display.state = .active
     }
 }
 
@@ -122,7 +187,7 @@ extension DisplaysViewModel {
             ])
         }
         
-        let completeConfigError = CGCompleteDisplayConfiguration(config, .permanently)
+        let completeConfigError = CGCompleteDisplayConfiguration(config, .forAppOnly)
         guard completeConfigError == .success else {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(completeConfigError.rawValue), userInfo: [
                 NSLocalizedDescriptionKey: "Failed to complete display configuration."
@@ -148,7 +213,7 @@ extension DisplaysViewModel {
             ])
         }
         
-        let completeConfigError = CGCompleteDisplayConfiguration(config, .permanently)
+        let completeConfigError = CGCompleteDisplayConfiguration(config, .forAppOnly)
         guard completeConfigError == .success else {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(completeConfigError.rawValue), userInfo: [
                 NSLocalizedDescriptionKey: "Failed to complete display configuration."

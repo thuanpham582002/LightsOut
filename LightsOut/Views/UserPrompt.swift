@@ -4,7 +4,7 @@
 
 import SwiftUI
 
-struct CustomAlertView: View {
+struct CustomUserPrompt: View {
     let title: String
     let message: String
     let primaryButton: (String, () -> Void)
@@ -13,7 +13,7 @@ struct CustomAlertView: View {
     var body: some View {
         ZStack {
             // Dimmed background
-            Color.black.opacity(0.5)
+            Color.black.opacity(0.8)
                 .ignoresSafeArea()
 
             // Alert container
@@ -35,8 +35,9 @@ struct CustomAlertView: View {
                     // Secondary button
                     Text(secondaryButton.0)
                         .font(.system(size: 16, weight: .medium))
+                        .padding(.vertical, 8) // Reduced vertical padding
+                        .padding(.horizontal, 16) // Added horizontal padding for consistent sizing
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
                         .background(Color.gray.opacity(0.2))
                         .foregroundColor(.white)
                         .cornerRadius(8)
@@ -45,13 +46,13 @@ struct CustomAlertView: View {
                                 .stroke(Color.gray.opacity(0.4), lineWidth: 1)
                         )
                         .onTapGesture(perform: secondaryButton.1)
-                
 
                     // Primary button
                     Text(primaryButton.0)
                         .font(.system(size: 16, weight: .medium))
+                        .padding(.vertical, 8) // Reduced vertical padding
+                        .padding(.horizontal, 16) // Added horizontal padding for consistent sizing
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(8)

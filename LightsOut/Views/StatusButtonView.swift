@@ -1,94 +1,101 @@
-//
-//  DisplayStatusButtonView.swift
-//  BlackoutTest
-
 import SwiftUI
 
 struct StatusButton: View {
     @ObservedObject var display: DisplayInfo
-    @FocusState private var isFocused: Bool
-    @State private var isShifted: Bool = false
-    var body: some View {
-        SoftButton(display: display)
-    }
-
-}
-
-func printmem(of object: AnyObject) {
-    let address = Unmanaged.passUnretained(object).toOpaque()
-    print("Memory address: \(address)")
-}
-
-struct HardButton: View {
-    @ObservedObject var display: DisplayInfo
     @EnvironmentObject var viewModel: DisplaysViewModel
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(display.state == .pending ? Color("AppBlue") : (!display.state.isEnabled() ? Color("AppRed") : Color("EnabledButton")))
-                .frame(width: 90, height: 32)
-
-            if display.state == .pending {
-                Text("Pending")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
-                    .opacity(0.3)
-
-            } else {
-                Text(!display.state.isEnabled() ? "Disabled" : "Active")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
-            }
-        }
-        .onTapGesture {
-            if display.state == .pending { return }
-
-            if !display.state.isEnabled() {
-                viewModel.unSoftDisableDisplay(display: display)
-            } else {
-                viewModel.softDisableDisplay(display: display)
-            }
+    @EnvironmentObject var errorHandler: ErrorHandler
+    
+    @State private var isAnimating = false
+    private var statusText: String {
+        switch display.state {
+        case .disabled:
+            return "Mirrored"
+        case .disconnected:
+            return "Disabled"
+        case .active:
+            return "Active"
+        case .pending:
+            return "Pending"
         }
     }
-}
-
-struct SoftButton: View {
-    @ObservedObject var display: DisplayInfo
-    @EnvironmentObject var viewModel: DisplaysViewModel
+    
+    private var statusColor: Color {
+        switch display.state {
+        case .disabled:
+            return Color("AppRed-Bright")
+        case .disconnected:
+            return Color("AppRed")
+        case .active:
+            return Color("AppGreen")
+        case .pending:
+            return Color("AppBlue")
+        }
+    }
     
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 6)
-                .fill(display.state == .pending ? Color("AppBlue") : (!display.state.isEnabled() ? Color("AppRed") : Color("EnabledButton")))
+                .fill(statusColor)
                 .frame(width: 90, height: 32)
 
             if display.state == .pending {
                 Text("Pending")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
-                    .opacity(0.3)
-
+                    .foregroundColor(isAnimating ? .white : .gray)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+                            isAnimating.toggle()
+                        }
+                    }
             } else {
-                Text(!display.state.isEnabled() ? "Disabled" : "Active")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
+                Text(statusText)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
             }
         }
         .onTapGesture {
-            printmem(of: display)
             if display.state == .pending { return }
 
-            if !display.state.isEnabled() {
-                viewModel.unSoftDisableDisplay(display: display)
-                print("dis: \(display.state)")
-            } else {
-                viewModel.softDisableDisplay(display: display)
-                print("dis: \(display.state)")
+            // Check if the Shift key is pressed
+            let shiftPressed = NSEvent.modifierFlags.contains(.shift)
 
+            if shiftPressed {
+                handleShiftTap()
+            } else {
+                handleTap()
+            }
+        }
+    }
+
+    private func handleTap() {
+        do {
+            if display.state.isOff() {
+                try viewModel.turnOnDisplay(display: display)
+            } else {
+                try viewModel.disconnectDisplay(display: display)
+            }
+        } catch let error {
+            errorHandler.handle(error: error) {
+                viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
+                viewModel.fetchDisplays()
+            }
+        }
+        
+
+    }
+
+    private func handleShiftTap() {
+        do {
+            if display.state.isOff() {
+                try viewModel.turnOnDisplay(display: display)
+            } else {
+                try viewModel.disableDisplay(display: display)
+            }
+        } catch let error {
+            errorHandler.handle(error: error) {
+                viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
+                viewModel.fetchDisplays()
             }
         }
     }
 }
-
-

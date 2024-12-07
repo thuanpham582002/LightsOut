@@ -33,7 +33,7 @@ class ContextMenuManager {
         let autoUpdatesOn = updateController.automaticallyChecksForUpdates
         let statusString = autoUpdatesOn ? " On" : " Off"
         let statusColor = autoUpdatesOn ? NSColor.systemGreen : NSColor.systemRed
-        let attributedTitle = NSMutableAttributedString(string: "Automatic Update Checks:")
+        let attributedTitle = NSMutableAttributedString(string: "Automatic Update Checks: ")
         let statusAttr = NSAttributedString(string: statusString, attributes: [.foregroundColor: statusColor])
         attributedTitle.append(statusAttr)
 
