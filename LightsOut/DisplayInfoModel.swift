@@ -7,14 +7,14 @@ import SwiftUI
 import CoreGraphics
 
 enum DisplayState {
-    case disabled
+    case mirrored
     case disconnected
     case pending
     case active
     
     func isOff() -> Bool {
         switch self {
-        case .disabled, .disconnected:
+        case .mirrored, .disconnected:
             return true
         default:
             return false
@@ -25,12 +25,14 @@ enum DisplayState {
 class DisplayInfo: ObservableObject, Identifiable, Hashable {
     let id: CGDirectDisplayID
     let name: String
-    let isPrimary: Bool
+    var isPrimary: Bool
     @Published var state: DisplayState {
         didSet {
             print("Display '\(name)' changed state to '\(state)'")
         }
     }
+    var mirroredTo: [DisplayInfo] = []
+    var mirrorSource: DisplayInfo?
 
     init(id: CGDirectDisplayID, name: String, state: DisplayState, isPrimary: Bool) {
         self.id = id

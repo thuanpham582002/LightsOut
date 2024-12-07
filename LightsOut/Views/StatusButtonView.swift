@@ -8,7 +8,7 @@ struct StatusButton: View {
     @State private var isAnimating = false
     private var statusText: String {
         switch display.state {
-        case .disabled:
+        case .mirrored:
             return "Mirrored"
         case .disconnected:
             return "Disabled"
@@ -21,7 +21,7 @@ struct StatusButton: View {
     
     private var statusColor: Color {
         switch display.state {
-        case .disabled:
+        case .mirrored:
             return Color("AppRed-Bright")
         case .disconnected:
             return Color("AppRed")
@@ -77,6 +77,7 @@ struct StatusButton: View {
         } catch let error {
             errorHandler.handle(error: error) {
                 viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
+                viewModel.resetAllDisplays()
                 viewModel.fetchDisplays()
             }
         }
@@ -94,6 +95,7 @@ struct StatusButton: View {
         } catch let error {
             errorHandler.handle(error: error) {
                 viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
+                viewModel.resetAllDisplays()
                 viewModel.fetchDisplays()
             }
         }

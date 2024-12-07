@@ -41,8 +41,6 @@ class GammaUpdateService {
         let zeroTable = [CGGammaValue](repeating: 0, count: 256)
         var runs = 0
         
-        display.state = .pending
-
         print(display.state)
         let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             let result = CGSetDisplayTransferByTable(display.id, 256, zeroTable, zeroTable, zeroTable)
@@ -56,7 +54,7 @@ class GammaUpdateService {
                 print("Applied zero gamma to display \(display.id) \(runs) times")
                 timer.invalidate()
                 self?.gammaUpdateTimers[display] = nil
-                display.state = .disabled
+                display.state = .mirrored
             }
         }
         

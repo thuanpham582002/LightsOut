@@ -70,8 +70,8 @@ struct ContentView: View {
             // Footer Section
             FooterText(isShiftPressed: $isShiftPressed)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 6)
 
     }
 }
@@ -79,6 +79,7 @@ struct ContentView: View {
 struct FooterText: View {
     @Binding var isShiftPressed: Bool
     @State private var eventMonitor: Any?
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         HStack(spacing: 4) {
@@ -96,9 +97,19 @@ struct FooterText: View {
                         .fill(isShiftPressed ? Color("AppBlue") : Color.clear)
                 )
 
-            Text("to use a mirroring-based disable.")
+            Text("to use a mirror-based disable ")
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(Color.gray)
+
+            Button(action: {
+                if let url = URL(string: "https://www.wikipedia.org") {
+                    openURL(url)
+                }
+            }) {
+                Image(systemName: "questionmark.circle")
+                    .font(.system(size: 12, weight: .medium))
+            }
+            .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
