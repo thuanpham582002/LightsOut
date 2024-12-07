@@ -9,5 +9,5 @@
 <hr>
 <div align="center">
   <h4>Well they do say a picture is worth a thousand words, and in this case leaves little room for more storytelling:</h4>
-  <img src="https://github.com/user-attachments/assets/97e0f575-d479-4cd9-80ac-345f952cabeb" alt="Very cool screenshot" align="center"/>
+  <img src="https://github.com/user-attachments/assets/17c684e0-5b70-45b9-a1f6-20e286ed6c40" alt="Very cool screenshot" align="center"/>
 </div>
