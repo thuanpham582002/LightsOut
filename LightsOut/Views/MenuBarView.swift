@@ -102,7 +102,7 @@ struct FooterText: View {
                 .foregroundColor(Color.gray)
 
             Button(action: {
-                if let url = URL(string: "https://www.wikipedia.org") {
+                if let url = URL(string: "https://alonx2.github.io/LightsOut/docs/disable-methods.html") {
                     openURL(url)
                 }
             }) {

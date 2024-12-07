@@ -41,11 +41,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         updateController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
         
-        #if !DEBUG
+//        #if !DEBUG
         if updateController.updater.automaticallyChecksForUpdates {
             updateController.updater.checkForUpdatesInBackground()
         }
-        #endif
+//        #endif
         
         contextMenuManager = ContextMenuManager(updateController: updateController.updater, statusItem: statusItem)
     }
