@@ -130,8 +130,13 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         
         // 🔧 ENHANCED ERROR HANDLING: Use direct API call
         // Begin display configuration
-        guard let config = DisplayAPIWrapper.shared.beginDisplayConfiguration() else {
-            throw DisplayError(msg: "Failed to begin display configuration")
+        let configResult = DisplayAPIWrapper.shared.beginDisplayConfiguration()
+        let config: CGDisplayConfigRef
+        switch configResult {
+        case .success(let configRef):
+            config = configRef
+        case .failure(let error):
+            throw DisplayError(msg: "Failed to begin display configuration: \(error.localizedDescription)")
         }
         
         let result = DisplayAPIWrapper.shared.configureDisplayEnabled(config, displayID: display.id, enabled: false)
