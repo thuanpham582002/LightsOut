@@ -145,7 +145,7 @@ private func emergencyHotkeyHandler(
     userData: UnsafeMutableRawPointer?
 ) -> OSStatus {
     
-    guard let userData = userData else { return eventNotHandledErr }
+    guard let userData = userData else { return OSStatus(eventNotHandledErr) }
     
     let manager = Unmanaged<EmergencyHotkeyManager>.fromOpaque(userData).takeUnretained()
     
@@ -163,7 +163,7 @@ private func emergencyHotkeyHandler(
     
     guard status == noErr else {
         print("⚠️ Failed to get hotkey event parameter: \(status)")
-        return eventNotHandledErr
+        return OSStatus(eventNotHandledErr)
     }
     
     // Check if this is our emergency hotkey
@@ -172,7 +172,7 @@ private func emergencyHotkeyHandler(
         return noErr
     }
     
-    return eventNotHandledErr
+    return OSStatus(eventNotHandledErr)
 }
 
 // MARK: - Emergency Recovery Extensions
