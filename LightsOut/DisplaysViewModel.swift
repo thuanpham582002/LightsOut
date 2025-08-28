@@ -112,7 +112,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         try! arrengementCache.cache()
     }
     
-    func disconnectDisplay(display: DisplayInfo) throws(DisplayError) {
+    func disconnectDisplay(display: DisplayInfo) throws {
         // 🛡️ BUILT-IN DISPLAY PROTECTION
         let validation = BuiltInDisplayGuard.shared.validateDisplayOperation(display, operation: .disconnect)
         
@@ -159,7 +159,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
     }
 
     
-    func disableDisplay(display: DisplayInfo) throws(DisplayError) {
+    func disableDisplay(display: DisplayInfo) throws {
         // 🛡️ BUILT-IN DISPLAY PROTECTION (Mirror method)
         let validation = BuiltInDisplayGuard.shared.validateDisplayOperation(display, operation: .mirror)
         
@@ -198,7 +198,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         DisplayPersistenceService.shared.saveDisplayStates(displays)
     }
     
-    func turnOnDisplay(display: DisplayInfo) throws(DisplayError) {
+    func turnOnDisplay(display: DisplayInfo) throws {
         switch display.state {
         case .disconnected:
             try reconnectDisplay(display: display)
@@ -283,7 +283,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
 // MARK: - TurnOn logic
 
 extension DisplaysViewModel {
-    fileprivate func reconnectDisplay(display: DisplayInfo) throws(DisplayError) {
+    fileprivate func reconnectDisplay(display: DisplayInfo) throws {
         var cid: CGDisplayConfigRef?
         let beginStatus = CGBeginDisplayConfiguration(&cid)
         guard beginStatus == .success, let config = cid else {
@@ -309,7 +309,7 @@ extension DisplaysViewModel {
         display.state = .active
     }
     
-    fileprivate func enableDisplay(display: DisplayInfo) throws(DisplayError) {
+    fileprivate func enableDisplay(display: DisplayInfo) throws {
         gammaService.restoreGamma(for: display)
         
         do {
