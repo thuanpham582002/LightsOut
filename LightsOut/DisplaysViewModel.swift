@@ -128,15 +128,23 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         
         display.state = .pending
         
-        // 🔧 ENHANCED ERROR HANDLING: Use comprehensive API wrapper
-        // Use direct API call without wrapper
-        let result = DisplayAPIWrapper.shared.configureDisplayEnabled(nil, displayID: display.id, enabled: false)
+        // 🔧 ENHANCED ERROR HANDLING: Use direct API call
+        // Begin display configuration
+        guard let config = DisplayAPIWrapper.shared.beginDisplayConfiguration() else {
+            throw DisplayError(msg: "Failed to begin display configuration")
+        }
+        
+        let result = DisplayAPIWrapper.shared.configureDisplayEnabled(config, displayID: display.id, enabled: false)
         
         switch result {
         case .success:
             print("✅ Successfully disconnected \(display.name)")
+            // Complete the configuration
+            _ = DisplayAPIWrapper.shared.completeDisplayConfiguration(config, option: .forAppOnly)
         case .failure(let error):
             print("❌ DisplayAPI Error in disconnectDisplay(\(display.name)): \(error)")
+            // Cancel configuration on failure
+            _ = DisplayAPIWrapper.shared.cancelDisplayConfiguration(config)
             throw DisplayError(msg: "Failed to disconnect '\(display.name)': \(error.localizedDescription)")
         }
         

@@ -210,60 +210,6 @@ class DisplayAPIWrapper {
         return .success(())
     }
     }
-    
-    // MARK: - Utility Methods
-    
-    /// Execute a display operation with automatic configuration management
-    func executeDisplayOperation<T>(
-        _ operation: @escaping (CGDisplayConfigRef) throws -> T
-    ) -> Result<T, DisplayAPIError> {
-        
-        // Begin configuration
-        let configResult = beginDisplayConfiguration()
-        guard case .success(let config) = configResult else {
-            return configResult.map { _ in fatalError() } // This line never executes, just for type inference
-        }
-        
-        do {
-            // Execute the operation
-            let result = try operation(config)
-            
-            // Complete configuration
-            switch completeDisplayConfiguration(config, option: .forAppOnly) {
-            case .success:
-                return .success(result)
-            case .failure(let error):
-                // Try to cancel the configuration before returning error
-                _ = cancelDisplayConfiguration(config)
-                return .failure(error)
-            }
-            
-        } catch {
-            // Cancel configuration on failure
-            _ = cancelDisplayConfiguration(config)
-            
-            if let displayError = error as? DisplayAPIError {
-                return .failure(displayError)
-            } else {
-                return .failure(.unknown(error.localizedDescription))
-            }
-        }
-    }
-    
-    /// Log API errors with context
-    func logError(_ error: DisplayAPIError, context: String) {
-        print("❌ Display API Error in \(context): \(error.localizedDescription)")
-        
-        // Additional logging for debugging
-        switch error {
-        case .configurationFailed(let cgError):
-            print("   CG Error Code: \(cgError.rawValue)")
-        case .apiCallFailed(let api, let code):
-            print("   API: \(api), Return Code: \(code)")
-        default:
-            break
-        }
-    }
 
 // MARK: - CGError Extensions
 extension CGError: LocalizedError {
