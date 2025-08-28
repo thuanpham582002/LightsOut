@@ -99,7 +99,7 @@ class DisplayAPIWrapper {
             return .success(())
         } else {
             let operation = enabled ? "enable" : "disable"
-            return .failure(.apiCallFailed("CGSConfigureDisplayEnabled(\(operation))", result))
+            return .failure(.apiCallFailed("CGSConfigureDisplayEnabled(\(operation))", Int32(result)))
         }
     }
     
@@ -205,14 +205,10 @@ class DisplayAPIWrapper {
     
     /// Safe wrapper for CGRestorePermanentDisplayConfiguration  
     func restorePermanentDisplayConfiguration() -> Result<Void, DisplayAPIError> {
-        let result = CGRestorePermanentDisplayConfiguration()
-        
-        switch result {
-        case .success:
-            return .success(())
-        default:
-            return .failure(.configurationFailed(result))
-        }
+        // CGRestorePermanentDisplayConfiguration() returns Void in macOS 14
+        CGRestorePermanentDisplayConfiguration()
+        return .success(())
+    }
     }
     
     // MARK: - Utility Methods
@@ -233,7 +229,7 @@ class DisplayAPIWrapper {
             let result = try operation(config)
             
             // Complete configuration
-            switch completeDisplayConfiguration(config, .forAppOnly) {
+            switch completeDisplayConfiguration(config, option: .forAppOnly) {
             case .success:
                 return .success(result)
             case .failure(let error):

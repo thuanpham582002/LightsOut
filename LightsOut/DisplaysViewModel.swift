@@ -155,7 +155,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         DisplayPersistenceService.shared.saveDisplayStates(displays)
         
         // 🔍 SAFETY CHECK: Ensure built-in display is still active after operation
-        BuiltInDisplayGuard.shared.ensureBuiltInDisplayActive()
+        _ = BuiltInDisplayGuard.shared.ensureBuiltInDisplayActive()
     }
 
     
@@ -190,7 +190,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         unRegisterMirrors(display: display)
         
         // 🔍 SAFETY CHECK: Ensure built-in display is still active after operation
-        BuiltInDisplayGuard.shared.ensureBuiltInDisplayActive()
+        _ = BuiltInDisplayGuard.shared.ensureBuiltInDisplayActive()
     }
     
     // 💾 Helper function to save display states

@@ -237,7 +237,7 @@ class DisplayRecoverySystem {
         var success = true
         for domain in preferenceDomains {
             do {
-                let result = Process.run("/usr/bin/defaults", arguments: ["delete", domain])
+                let result = try Process.run("/usr/bin/defaults", arguments: ["delete", domain])
                 if result.terminationStatus != 0 && result.terminationStatus != 1 { // 1 is "domain not found" which is ok
                     success = false
                 }

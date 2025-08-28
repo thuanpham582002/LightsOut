@@ -147,7 +147,7 @@ private func emergencyHotkeyHandler(
     
     guard let userData = userData else { return OSStatus(eventNotHandledErr) }
     
-    let manager = Unmanaged<EmergencyHotkeyManager>.fromOpaque(userData).takeUnretained()
+    let manager = Unmanaged<EmergencyHotkeyManager>.fromOpaque(userData).takeUnretainedValue()
     
     // Verify this is the hotkey event we're expecting
     var hotKeyID = EventHotKeyID()

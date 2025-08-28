@@ -105,9 +105,11 @@ class DisplayConnectionMonitor {
             print("🔧 Display mode changed: \(displayID)")
         }
         
-        if flags.contains(.setOriginFlag) {
-            print("📍 Display position changed: \(displayID)")
-        }
+        // Note: setOriginFlag not available in macOS 14/Xcode 15.4
+        // Position changes not tracked in this version
+        // if flags.contains(.setOriginFlag) {
+        //     print("📍 Display position changed: \(displayID)")
+        // }
         
         if flags.contains(.enabledFlag) || flags.contains(.disabledFlag) {
             print("🔘 Display enabled/disabled state changed: \(displayID)")
@@ -129,7 +131,7 @@ class DisplayConnectionMonitor {
             print("🏠 Built-in display reconnected: \(displayID)")
             
             // Ensure built-in display is never in disconnected state when it comes back
-            BuiltInDisplayGuard.shared.ensureBuiltInDisplayActive()
+            _ = BuiltInDisplayGuard.shared.ensureBuiltInDisplayActive()
         }
         
         DispatchQueue.main.async { [weak self] in
@@ -172,7 +174,7 @@ private func displayReconfigurationCallback(
 ) {
     guard let userInfo = userInfo else { return }
     
-    let monitor = Unmanaged<DisplayConnectionMonitor>.fromOpaque(userInfo).takeUnretained()
+    let monitor = Unmanaged<DisplayConnectionMonitor>.fromOpaque(userInfo).takeUnretainedValue()
     monitor.handleDisplayReconfiguration(displayID: display, flags: flags)
 }
 
@@ -186,7 +188,7 @@ extension CGDisplayChangeSummaryFlags {
         if contains(.enabledFlag) { descriptions.append("ENABLED") }
         if contains(.disabledFlag) { descriptions.append("DISABLED") }
         if contains(.setModeFlag) { descriptions.append("MODE_CHANGE") }
-        if contains(.setOriginFlag) { descriptions.append("POSITION_CHANGE") }
+        // if contains(.setOriginFlag) { descriptions.append("POSITION_CHANGE") }  // Not available
         if contains(.desktopShapeChangedFlag) { descriptions.append("DESKTOP_SHAPE") }
         
         return descriptions.isEmpty ? "NONE" : descriptions.joined(separator: ", ")

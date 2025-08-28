@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 /// Weak reference wrapper for objects
 class WeakRef<T: AnyObject> {

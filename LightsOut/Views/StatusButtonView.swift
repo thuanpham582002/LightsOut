@@ -75,7 +75,7 @@ struct StatusButton: View {
                 try viewModel.disconnectDisplay(display: display)
             }
         } catch let error {
-            errorHandler.handle(error: error) {
+            errorHandler.handle(error: error as? DisplayError ?? DisplayError.unknownError) {
                 viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
                 viewModel.resetAllDisplays()
                 viewModel.fetchDisplays()
@@ -93,7 +93,7 @@ struct StatusButton: View {
                 try viewModel.disableDisplay(display: display)
             }
         } catch let error {
-            errorHandler.handle(error: error) {
+            errorHandler.handle(error: error as? DisplayError ?? DisplayError.unknownError) {
                 viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
                 viewModel.resetAllDisplays()
                 viewModel.fetchDisplays()
