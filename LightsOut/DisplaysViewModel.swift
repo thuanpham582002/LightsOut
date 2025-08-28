@@ -50,7 +50,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         case .success(let displays):
             activeDisplays = displays
         case .failure(let error):
-            DisplayAPIWrapper.shared.logError(error, context: "fetchDisplays")
+            print("❌ DisplayAPI Error in fetchDisplays: \(error)")
             print("❌ Failed to get active display list, using empty list")
             activeDisplays = []
         }
@@ -118,7 +118,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         
         switch validation {
         case .blocked(let reason):
-            throw BuiltInDisplayGuard.builtInDisplayProtection(reason)
+            throw DisplayError(msg: "🛑️ Built-in Display Protection: \(reason)")
         case .warning(let message):
             print("⚠️ Display Warning: \(message)")
             // Continue with operation but log warning
@@ -129,22 +129,14 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         display.state = .pending
         
         // 🔧 ENHANCED ERROR HANDLING: Use comprehensive API wrapper
-        let result = DisplayAPIWrapper.shared.executeDisplayOperation { config in
-            // Disable the display using the private API
-            let disableResult = DisplayAPIWrapper.shared.configureDisplayEnabled(config, displayID: display.id, enabled: false)
-            switch disableResult {
-            case .success:
-                return ()
-            case .failure(let error):
-                throw error
-            }
-        }
+        // Use direct API call without wrapper
+        let result = DisplayAPIWrapper.shared.configureDisplayEnabled(nil, displayID: display.id, enabled: false)
         
         switch result {
         case .success:
             print("✅ Successfully disconnected \(display.name)")
         case .failure(let error):
-            DisplayAPIWrapper.shared.logError(error, context: "disconnectDisplay(\(display.name))")
+            print("❌ DisplayAPI Error in disconnectDisplay(\(display.name)): \(error)")
             throw DisplayError(msg: "Failed to disconnect '\(display.name)': \(error.localizedDescription)")
         }
         
@@ -165,7 +157,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         
         switch validation {
         case .blocked(let reason):
-            throw BuiltInDisplayGuard.builtInDisplayProtection(reason)
+            throw DisplayError(msg: "🛑️ Built-in Display Protection: \(reason)")
         case .warning(let message):
             print("⚠️ Display Warning: \(message)")
             // Continue with operation but log warning
@@ -222,14 +214,14 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         case .success:
             print("✅ Color sync settings restored")
         case .failure(let error):
-            DisplayAPIWrapper.shared.logError(error, context: "resetAllDisplays - ColorSync")
+            print("❌ DisplayAPI Error in resetAllDisplays - ColorSync: \(error)")
         }
         
         switch DisplayAPIWrapper.shared.restorePermanentDisplayConfiguration() {
         case .success:
             print("✅ Permanent display configuration restored")
         case .failure(let error):
-            DisplayAPIWrapper.shared.logError(error, context: "resetAllDisplays - PermanentConfig")
+            print("❌ DisplayAPI Error in resetAllDisplays - PermanentConfig: \(error)")
         }
         
         // 💾 PERSISTENCE: Save state after resetting all displays
