@@ -14,9 +14,4 @@ struct DisplayError: Error, Identifiable {
     // MARK: - Common Error Cases
     
     static let unknownError = DisplayError(msg: "Unknown error occurred")
-    
-    /// Creates a DisplayError for built-in display protection
-    static func builtInDisplayProtection(_ reason: String) -> DisplayError {
-        return DisplayError(msg: "🛡️ Built-in Display Protection: \(reason)")
-    }
 }

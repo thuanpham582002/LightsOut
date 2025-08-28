@@ -76,7 +76,7 @@ class DisplayConnectionMonitor {
     }
     
     /// Handle display configuration changes
-    private func handleDisplayReconfiguration(displayID: CGDirectDisplayID, flags: CGDisplayChangeSummaryFlags) {
+    func handleDisplayReconfiguration(displayID: CGDirectDisplayID, flags: CGDisplayChangeSummaryFlags) {
         print("🔄 Display reconfiguration: Display \(displayID), Flags: \(flags)")
         
         // Get current display state

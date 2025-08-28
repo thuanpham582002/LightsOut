@@ -118,7 +118,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         
         switch validation {
         case .blocked(let reason):
-            throw DisplayError.builtInDisplayProtection(reason)
+            throw BuiltInDisplayGuard.builtInDisplayProtection(reason)
         case .warning(let message):
             print("⚠️ Display Warning: \(message)")
             // Continue with operation but log warning
@@ -165,7 +165,7 @@ class DisplaysViewModel: ObservableObject, DisplayConnectionDelegate, SleepWakeD
         
         switch validation {
         case .blocked(let reason):
-            throw DisplayError.builtInDisplayProtection(reason)
+            throw BuiltInDisplayGuard.builtInDisplayProtection(reason)
         case .warning(let message):
             print("⚠️ Display Warning: \(message)")
             // Continue with operation but log warning

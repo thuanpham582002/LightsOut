@@ -108,7 +108,7 @@ class EmergencyHotkeyManager {
     }
     
     /// Handle emergency hotkey press
-    private func handleEmergencyHotkey() {
+    func handleEmergencyHotkey() {
         print("🚨 EMERGENCY HOTKEY TRIGGERED: Cmd+Option+Shift+L pressed!")
         print("🆘 Initiating emergency display recovery...")
         
