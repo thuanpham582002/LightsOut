@@ -264,7 +264,45 @@ class DisplayAPIWrapper {
             break
         }
     }
-}
+    
+    // MARK: - Utility Methods
+    
+    /// Log error with context information
+    func logError(_ error: DisplayAPIError, context: String) {
+        print("❌ DisplayAPI Error in \(context):")
+        printError(error)
+    }
+    
+    /// Execute display operation with proper configuration management
+    func executeDisplayOperation<T>(_ operation: (CGDisplayConfigRef) throws -> T) -> Result<T, DisplayAPIError> {
+        // Begin display configuration
+        guard let config = beginDisplayConfiguration() else {
+            return .failure(.configurationFailed(.kCGErrorFailure))
+        }
+        
+        do {
+            // Execute the operation
+            let result = try operation(config)
+            
+            // Complete configuration
+            switch completeDisplayConfiguration(config, option: .forAppOnly) {
+            case .success:
+                return .success(result)
+            case .failure(let error):
+                // Try to cancel the configuration before returning error
+                _ = cancelDisplayConfiguration(config)
+                return .failure(error)
+            }
+            
+        } catch {
+            // Cancel configuration on failure
+            _ = cancelDisplayConfiguration(config)
+            if let displayError = error as? DisplayAPIError {
+                return .failure(displayError)
+            }
+            return .failure(.configurationFailed(.kCGErrorFailure))
+        }
+    }
 
 // MARK: - CGError Extensions
 extension CGError: LocalizedError {
