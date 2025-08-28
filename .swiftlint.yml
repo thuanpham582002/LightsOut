@@ -1,0 +1,106 @@
+# SwiftLint Configuration for LightsOut
+# Ensures consistent code style and catches potential issues
+
+# Include/Exclude paths
+included:
+  - LightsOut/
+
+excluded:
+  - LightsOut.xcodeproj
+  - build/
+  - DerivedData/
+  - .build/
+
+# Enabled/Disabled rules
+disabled_rules:
+  - trailing_whitespace # Sometimes needed for formatting
+  - todo # TODOs are acceptable during development
+  - line_length # We allow longer lines for readability
+
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - strong_iboutlet
+  - closure_spacing
+  - operator_usage_whitespace
+  - redundant_nil_coalescing
+  - switch_case_alignment
+  - vertical_parameter_alignment
+  - unused_import
+  - unused_private_declaration
+
+# Rule configurations
+line_length:
+  warning: 120
+  error: 150
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_urls: true
+
+function_body_length:
+  warning: 60
+  error: 100
+
+function_parameter_count:
+  warning: 6
+  error: 8
+
+type_body_length:
+  warning: 300
+  error: 400
+
+file_length:
+  warning: 500
+  error: 800
+
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+
+nesting:
+  type_level:
+    warning: 3
+    error: 5
+  statement_level:
+    warning: 5
+    error: 10
+
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 40
+    error: 60
+  excluded:
+    - id
+    - URL
+    - cid
+    - fps
+
+# Custom rules for LightsOut
+custom_rules:
+  # Ensure proper error handling
+  force_try_warning:
+    name: "Force Try Warning"
+    regex: 'try!'
+    message: "Consider using proper error handling instead of try!"
+    severity: warning
+    
+  # Memory management for display mirroring
+  display_retain_cycle:
+    name: "Display Retain Cycle Check"
+    regex: 'var.*mirroredTo.*=.*\[DisplayInfo\]'
+    message: "Use WeakRef<DisplayInfo> to prevent retain cycles in display mirroring"
+    severity: error
+    
+  # Ensure built-in display protection
+  builtin_display_check:
+    name: "Built-in Display Protection"
+    regex: 'CGSConfigureDisplayEnabled.*false'
+    message: "Ensure built-in display protection is checked before disabling display"
+    severity: warning
+
+# Reporter
+reporter: "xcode" # xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown

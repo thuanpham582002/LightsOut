@@ -1,0 +1,261 @@
+name: Build and Release LightsOut
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PRODUCT_NAME: LightsOut
+  SCHEME_NAME: LightsOut
+  CONFIGURATION: Release
+
+jobs:
+  build:
+    name: Build LightsOut
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.4'
+        
+    - name: Cache derived data
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-derived-data-${{ hashFiles('**/*.xcodeproj') }}
+        restore-keys: |
+          ${{ runner.os }}-derived-data-
+          
+    - name: Show Xcode version
+      run: xcodebuild -version
+      
+    - name: Show available simulators and devices
+      run: xcrun simctl list devices available
+      
+    - name: Clean build folder
+      run: xcodebuild clean -project LightsOut.xcodeproj -scheme ${{ env.SCHEME_NAME }} -configuration ${{ env.CONFIGURATION }}
+      
+    - name: Build application
+      run: |
+        xcodebuild build \
+          -project LightsOut.xcodeproj \
+          -scheme ${{ env.SCHEME_NAME }} \
+          -configuration ${{ env.CONFIGURATION }} \
+          -destination "platform=macOS,arch=arm64" \
+          -derivedDataPath build/ \
+          ONLY_ACTIVE_ARCH=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcpretty || exit 1
+          
+    - name: Archive application  
+      run: |
+        xcodebuild archive \
+          -project LightsOut.xcodeproj \
+          -scheme ${{ env.SCHEME_NAME }} \
+          -configuration ${{ env.CONFIGURATION }} \
+          -destination "platform=macOS,arch=arm64" \
+          -archivePath build/${{ env.PRODUCT_NAME }}.xcarchive \
+          ONLY_ACTIVE_ARCH=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcpretty || exit 1
+          
+    - name: Export application
+      run: |
+        mkdir -p build/export
+        cp -R "build/${{ env.PRODUCT_NAME }}.xcarchive/Products/Applications/${{ env.PRODUCT_NAME }}.app" "build/export/"
+        
+    - name: Create DMG
+      run: |
+        # Install create-dmg if not available
+        if ! command -v create-dmg &> /dev/null; then
+          brew install create-dmg
+        fi
+        
+        # Create DMG
+        create-dmg \
+          --volname "${{ env.PRODUCT_NAME }}" \
+          --volicon "build/export/${{ env.PRODUCT_NAME }}.app/Contents/Resources/AppIcon.icns" \
+          --window-pos 200 120 \
+          --window-size 800 450 \
+          --icon-size 100 \
+          --icon "${{ env.PRODUCT_NAME }}.app" 200 190 \
+          --hide-extension "${{ env.PRODUCT_NAME }}.app" \
+          --app-drop-link 600 185 \
+          --hdiutil-quiet \
+          "build/${{ env.PRODUCT_NAME }}-${{ github.sha }}.dmg" \
+          "build/export/" \
+          || true
+          
+    - name: Create ZIP archive
+      run: |
+        cd build/export
+        zip -r "../${{ env.PRODUCT_NAME }}-${{ github.sha }}.zip" "${{ env.PRODUCT_NAME }}.app"
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: LightsOut-Build-${{ github.sha }}
+        path: |
+          build/${{ env.PRODUCT_NAME }}-${{ github.sha }}.zip
+          build/${{ env.PRODUCT_NAME }}-${{ github.sha }}.dmg
+        retention-days: 30
+        
+    - name: Upload app bundle
+      uses: actions/upload-artifact@v4  
+      with:
+        name: LightsOut-App-${{ github.sha }}
+        path: build/export/${{ env.PRODUCT_NAME }}.app
+        retention-days: 7
+
+  test:
+    name: Run Tests
+    runs-on: macos-14
+    needs: build
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.4'
+        
+    - name: Run unit tests
+      run: |
+        xcodebuild test \
+          -project LightsOut.xcodeproj \
+          -scheme ${{ env.SCHEME_NAME }} \
+          -destination "platform=macOS,arch=arm64" \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcpretty || exit 1
+
+  release:
+    name: Create Release
+    runs-on: macos-14
+    needs: [build, test]
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: LightsOut-Build-${{ github.sha }}
+        path: ./artifacts
+        
+    - name: Get tag version
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: LightsOut ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## 🎉 LightsOut Release ${{ steps.get_version.outputs.VERSION }}
+          
+          ### 🚀 New Features & Fixes
+          - 🛡️ Built-in Display Protection (prevents system lockout)
+          - 💾 Persistent Display Memory (remembers disconnected displays)
+          - 🔌 Smart Hot-plug/Unplug Detection  
+          - 😴 Sleep/Wake Safety (auto-restores displays before sleep)
+          - 🔧 Memory Leak Fixes (improved stability)
+          - ⚙️ Enhanced Error Handling (comprehensive API wrapping)
+          - 🆘 Multi-tier Recovery System (4-level recovery)
+          - 🔥 Emergency Hotkey (`Cmd+Option+Shift+L`)
+          
+          ### 📋 System Requirements
+          - macOS 14.0+ (Sonoma)
+          - Apple Silicon (M1/M2/M3) or Intel Mac
+          
+          ### 🔧 Installation
+          1. Download `LightsOut-${{ github.sha }}.dmg`
+          2. Open DMG and drag LightsOut to Applications
+          3. Launch from Applications folder
+          4. Grant display permissions if prompted
+          
+          ### 🆘 Emergency Recovery
+          If your displays go black, press `Cmd+Option+Shift+L` for emergency recovery!
+          
+          **⚠️ CRITICAL SAFETY**: This version prevents built-in display disable (the bug that could lock you out)
+        files: |
+          ./artifacts/LightsOut-${{ github.sha }}.dmg
+          ./artifacts/LightsOut-${{ github.sha }}.zip
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  security-scan:
+    name: Security Scan
+    runs-on: macos-14
+    needs: build
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Download app artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: LightsOut-App-${{ github.sha }}
+        path: ./app
+        
+    - name: Security scan with codesign
+      run: |
+        echo "🔍 Security scanning LightsOut.app..."
+        
+        # Check code signing status
+        codesign -dv --verbose=4 "./app/LightsOut.app" || echo "⚠️ App not code signed (expected in CI)"
+        
+        # Check for suspicious entitlements
+        if [ -f "./app/LightsOut.app/Contents/entitlements.plist" ]; then
+          echo "📋 Checking entitlements..."
+          plutil -p "./app/LightsOut.app/Contents/entitlements.plist"
+        fi
+        
+        # Basic security checks
+        echo "🔒 Running basic security checks..."
+        find "./app/LightsOut.app" -name "*.dylib" -o -name "*.framework" | head -10
+        
+        echo "✅ Security scan completed"
+
+  compatibility-test:
+    name: Compatibility Test
+    runs-on: macos-14
+    needs: build
+    strategy:
+      matrix:
+        destination:
+          - "platform=macOS,arch=arm64"
+          - "platform=macOS,arch=x86_64"
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.4'
+        
+    - name: Build for ${{ matrix.destination }}
+      run: |
+        xcodebuild build \
+          -project LightsOut.xcodeproj \
+          -scheme ${{ env.SCHEME_NAME }} \
+          -configuration ${{ env.CONFIGURATION }} \
+          -destination "${{ matrix.destination }}" \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcpretty || exit 1

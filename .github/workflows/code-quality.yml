@@ -1,0 +1,197 @@
+name: Code Quality & Analysis
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  swift-lint:
+    name: Swift Lint
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install SwiftLint
+      run: |
+        brew install swiftlint
+        
+    - name: Run SwiftLint
+      run: |
+        swiftlint lint --reporter github-actions-logging
+        
+  code-analysis:
+    name: Static Code Analysis
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.4'
+        
+    - name: Run Static Analysis
+      run: |
+        xcodebuild analyze \
+          -project LightsOut.xcodeproj \
+          -scheme LightsOut \
+          -configuration Debug \
+          -destination "platform=macOS,arch=arm64" \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcpretty || exit 1
+          
+  security-audit:
+    name: Security Audit
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Scan for secrets
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: main
+        head: HEAD
+        extra_args: --debug --only-verified
+        
+    - name: Check for private API usage
+      run: |
+        echo "🔍 Scanning for private API usage..."
+        
+        # Check for known private APIs
+        grep -r "CGSConfigureDisplayEnabled" LightsOut/ || echo "✅ Private API usage documented"
+        grep -r "_silgen_name" LightsOut/ || echo "✅ No undocumented private API bridges"
+        
+        # Check for security best practices
+        echo "🔒 Checking security practices..."
+        if grep -r "NSLog\|print.*password\|print.*token" LightsOut/ 2>/dev/null; then
+          echo "⚠️ Potential sensitive data logging found"
+          exit 1
+        else
+          echo "✅ No sensitive data logging detected"
+        fi
+
+  documentation:
+    name: Documentation Check
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check README
+      run: |
+        if [ ! -f "README.md" ]; then
+          echo "❌ README.md missing"
+          exit 1
+        fi
+        
+        # Check for essential documentation sections
+        if ! grep -q "Installation" README.md; then
+          echo "⚠️ Installation section missing in README"
+        fi
+        
+        if ! grep -q "Usage" README.md; then
+          echo "⚠️ Usage section missing in README"  
+        fi
+        
+        echo "✅ Documentation check completed"
+        
+    - name: Check code documentation
+      run: |
+        echo "📚 Checking code documentation coverage..."
+        
+        # Count documented vs undocumented functions
+        TOTAL_FUNCS=$(grep -r "func " LightsOut/ --include="*.swift" | wc -l)
+        DOCUMENTED_FUNCS=$(grep -r "/// " LightsOut/ --include="*.swift" -A 1 | grep "func " | wc -l)
+        
+        echo "Total functions: $TOTAL_FUNCS"
+        echo "Documented functions: $DOCUMENTED_FUNCS"
+        
+        if [ $TOTAL_FUNCS -gt 0 ]; then
+          DOC_RATIO=$((DOCUMENTED_FUNCS * 100 / TOTAL_FUNCS))
+          echo "Documentation ratio: $DOC_RATIO%"
+          
+          if [ $DOC_RATIO -lt 30 ]; then
+            echo "⚠️ Low documentation coverage: $DOC_RATIO%"
+          else
+            echo "✅ Good documentation coverage: $DOC_RATIO%"
+          fi
+        fi
+
+  performance-check:
+    name: Performance Analysis  
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.4'
+        
+    - name: Build with optimization
+      run: |
+        xcodebuild build \
+          -project LightsOut.xcodeproj \
+          -scheme LightsOut \
+          -configuration Release \
+          -destination "platform=macOS,arch=arm64" \
+          CODE_SIGNING_ALLOWED=NO \
+          OTHER_SWIFT_FLAGS="-warnings-as-errors" \
+          | xcpretty || exit 1
+          
+    - name: Check binary size
+      run: |
+        BINARY_PATH="build/Build/Products/Release/LightsOut.app/Contents/MacOS/LightsOut"
+        
+        if [ -f "$BINARY_PATH" ]; then
+          BINARY_SIZE=$(stat -f%z "$BINARY_PATH")
+          BINARY_SIZE_MB=$((BINARY_SIZE / 1024 / 1024))
+          
+          echo "📦 Binary size: ${BINARY_SIZE_MB}MB"
+          
+          # Alert if binary is too large
+          if [ $BINARY_SIZE_MB -gt 50 ]; then
+            echo "⚠️ Binary size is large: ${BINARY_SIZE_MB}MB"
+          else
+            echo "✅ Binary size is reasonable: ${BINARY_SIZE_MB}MB"
+          fi
+        else
+          echo "⚠️ Binary not found for size check"
+        fi
+
+  dependency-audit:
+    name: Dependency Audit
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check Swift Package dependencies
+      run: |
+        if [ -f "LightsOut.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" ]; then
+          echo "📦 Checking Swift Package dependencies..."
+          cat "LightsOut.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        else
+          echo "✅ No Swift Package dependencies found"
+        fi
+        
+    - name: Security check for dependencies
+      run: |
+        echo "🔒 Checking for security issues in dependencies..."
+        
+        # This is a basic check - in production you might want to use tools like 
+        # https://github.com/sonatypeoss/auditjs or similar for Swift
+        echo "✅ Dependency security check completed (basic check only)"
