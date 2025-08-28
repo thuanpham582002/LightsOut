@@ -3,38 +3,64 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F9A001012CFA400000000001 /* LightsOutApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A001002CFA400000000001 /* LightsOutApp.swift */; };
+		F9A001032CFA400000000002 /* DisplaysViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A001022CFA400000000002 /* DisplaysViewModel.swift */; };
+		F9A001052CFA400000000003 /* DisplayInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A001042CFA400000000003 /* DisplayInfoModel.swift */; };
+		F9A001072CFA400000000004 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A001062CFA400000000004 /* MenuBarView.swift */; };
+		F9A001092CFA400000000005 /* DisplayListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A001082CFA400000000005 /* DisplayListView.swift */; };
+		F9A00110B2CFA400000000006 /* MenuBarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00110A2CFA400000000006 /* MenuBarHeaderView.swift */; };
+		F9A00111B2CFA400000000007 /* StatusButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00111A2CFA400000000007 /* StatusButtonView.swift */; };
+		F9A00112B2CFA400000000008 /* DisplayDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00112A2CFA400000000008 /* DisplayDetailsView.swift */; };
+		F9A00113B2CFA400000000009 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00113A2CFA400000000009 /* LoadingView.swift */; };
+		F9A00114B2CFA400000000010 /* UserPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00114A2CFA400000000010 /* UserPrompt.swift */; };
+		F9A00115B2CFA400000000011 /* ContextMenuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00115A2CFA400000000011 /* ContextMenuManager.swift */; };
+		F9A00116B2CFA400000000012 /* ConfigurationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00116A2CFA400000000012 /* ConfigurationError.swift */; };
+		F9A00117B2CFA400000000013 /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00117A2CFA400000000013 /* ErrorHandler.swift */; };
+		F9A00118B2CFA400000000014 /* DisplayArrangementCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00118A2CFA400000000014 /* DisplayArrangementCacheService.swift */; };
+		F9A00119B2CFA400000000015 /* GammaUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00119A2CFA400000000015 /* GammaUpdateService.swift */; };
+		F9A00120B2CFA400000000016 /* BuiltInDisplayGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00120A2CFA400000000016 /* BuiltInDisplayGuard.swift */; };
+		F9A00121B2CFA400000000017 /* DisplayPersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00121A2CFA400000000017 /* DisplayPersistenceService.swift */; };
+		F9A00122B2CFA400000000018 /* DisplayConnectionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00122A2CFA400000000018 /* DisplayConnectionMonitor.swift */; };
+		F9A00123B2CFA400000000019 /* SleepWakeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00123A2CFA400000000019 /* SleepWakeManager.swift */; };
+		F9A00124B2CFA400000000020 /* DisplayAPIWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00124A2CFA400000000020 /* DisplayAPIWrapper.swift */; };
+		F9A00125B2CFA400000000021 /* DisplayRecoverySystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00125A2CFA400000000021 /* DisplayRecoverySystem.swift */; };
+		F9A00126B2CFA400000000022 /* EmergencyHotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00126A2CFA400000000022 /* EmergencyHotkeyManager.swift */; };
+		F9A00127B2CFA400000000023 /* WeakRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00127A2CFA400000000023 /* WeakRef.swift */; };
 		F98E00782CFA08FD00A25515 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F98E00772CFA08FD00A25515 /* LaunchAtLogin */; };
 		F98E007E2CFA1D6200A25515 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F98E007D2CFA1D6200A25515 /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F9C24CAF2CF67884004094EC /* LightsOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LightsOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9A001002CFA400000000001 /* LightsOutApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsOutApp.swift; sourceTree = "<group>"; };
+		F9A001022CFA400000000002 /* DisplaysViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaysViewModel.swift; sourceTree = "<group>"; };
+		F9A001042CFA400000000003 /* DisplayInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayInfoModel.swift; sourceTree = "<group>"; };
+		F9A001062CFA400000000004 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		F9A001082CFA400000000005 /* DisplayListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayListView.swift; sourceTree = "<group>"; };
+		F9A00110A2CFA400000000006 /* MenuBarHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarHeaderView.swift; sourceTree = "<group>"; };
+		F9A00111A2CFA400000000007 /* StatusButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusButtonView.swift; sourceTree = "<group>"; };
+		F9A00112A2CFA400000000008 /* DisplayDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayDetailsView.swift; sourceTree = "<group>"; };
+		F9A00113A2CFA400000000009 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		F9A00114A2CFA400000000010 /* UserPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPrompt.swift; sourceTree = "<group>"; };
+		F9A00115A2CFA400000000011 /* ContextMenuManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuManager.swift; sourceTree = "<group>"; };
+		F9A00116A2CFA400000000012 /* ConfigurationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationError.swift; sourceTree = "<group>"; };
+		F9A00117A2CFA400000000013 /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
+		F9A00118A2CFA400000000014 /* DisplayArrangementCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayArrangementCacheService.swift; sourceTree = "<group>"; };
+		F9A00119A2CFA400000000015 /* GammaUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GammaUpdateService.swift; sourceTree = "<group>"; };
+		F9A00120A2CFA400000000016 /* BuiltInDisplayGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInDisplayGuard.swift; sourceTree = "<group>"; };
+		F9A00121A2CFA400000000017 /* DisplayPersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPersistenceService.swift; sourceTree = "<group>"; };
+		F9A00122A2CFA400000000018 /* DisplayConnectionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConnectionMonitor.swift; sourceTree = "<group>"; };
+		F9A00123A2CFA400000000019 /* SleepWakeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepWakeManager.swift; sourceTree = "<group>"; };
+		F9A00124A2CFA400000000020 /* DisplayAPIWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayAPIWrapper.swift; sourceTree = "<group>"; };
+		F9A00125A2CFA400000000021 /* DisplayRecoverySystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayRecoverySystem.swift; sourceTree = "<group>"; };
+		F9A00126A2CFA400000000022 /* EmergencyHotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyHotkeyManager.swift; sourceTree = "<group>"; };
+		F9A00127A2CFA400000000023 /* WeakRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakRef.swift; sourceTree = "<group>"; };
+		F9A00128A2CFA400000000024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		F98E00812CFA276200A25515 /* Exceptions for "LightsOut" folder in "LightsOut" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = F9C24CAE2CF67884004094EC /* LightsOut */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		F9C24CB12CF67884004094EC /* LightsOut */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				F98E00812CFA276200A25515 /* Exceptions for "LightsOut" folder in "LightsOut" target */,
-			);
-			path = LightsOut;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		F9C24CAC2CF67884004094EC /* Frameworks */ = {
@@ -65,6 +91,69 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F9C24CB12CF67884004094EC /* LightsOut */ = {
+			isa = PBXGroup;
+			children = (
+				F9A001002CFA400000000001 /* LightsOutApp.swift */,
+				F9A001022CFA400000000002 /* DisplaysViewModel.swift */,
+				F9A001042CFA400000000003 /* DisplayInfoModel.swift */,
+				F9A001302CFA400000000030 /* Views */,
+				F9A001312CFA400000000031 /* Services */,
+				F9A001332CFA400000000033 /* Utils */,
+				F9A001342CFA400000000034 /* Errors */,
+				F9A00128A2CFA400000000024 /* Info.plist */,
+			);
+			path = LightsOut;
+			sourceTree = "<group>";
+		};
+		F9A001302CFA400000000030 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F9A001062CFA400000000004 /* MenuBarView.swift */,
+				F9A001082CFA400000000005 /* DisplayListView.swift */,
+				F9A00110A2CFA400000000006 /* MenuBarHeaderView.swift */,
+				F9A00111A2CFA400000000007 /* StatusButtonView.swift */,
+				F9A00112A2CFA400000000008 /* DisplayDetailsView.swift */,
+				F9A00113A2CFA400000000009 /* LoadingView.swift */,
+				F9A00114A2CFA400000000010 /* UserPrompt.swift */,
+				F9A00115A2CFA400000000011 /* ContextMenuManager.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F9A001312CFA400000000031 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				F9A00118A2CFA400000000014 /* DisplayArrangementCacheService.swift */,
+				F9A00119A2CFA400000000015 /* GammaUpdateService.swift */,
+				F9A00120A2CFA400000000016 /* BuiltInDisplayGuard.swift */,
+				F9A00121A2CFA400000000017 /* DisplayPersistenceService.swift */,
+				F9A00122A2CFA400000000018 /* DisplayConnectionMonitor.swift */,
+				F9A00123A2CFA400000000019 /* SleepWakeManager.swift */,
+				F9A00124A2CFA400000000020 /* DisplayAPIWrapper.swift */,
+				F9A00125A2CFA400000000021 /* DisplayRecoverySystem.swift */,
+				F9A00126A2CFA400000000022 /* EmergencyHotkeyManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F9A001332CFA400000000033 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F9A00127A2CFA400000000023 /* WeakRef.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		F9A001342CFA400000000034 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				F9A00116A2CFA400000000012 /* ConfigurationError.swift */,
+				F9A00117A2CFA400000000013 /* ErrorHandler.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -79,9 +168,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				F9C24CB12CF67884004094EC /* LightsOut */,
 			);
 			name = LightsOut;
 			packageProductDependencies = (
@@ -99,16 +185,16 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1610;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					F9C24CAE2CF67884004094EC = {
-						CreatedOnToolsVersion = 16.1;
-						LastSwiftMigration = 1610;
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
 			buildConfigurationList = F9C24CAA2CF67884004094EC /* Build configuration list for PBXProject "LightsOut" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -116,12 +202,10 @@
 				Base,
 			);
 			mainGroup = F9C24CA62CF67884004094EC;
-			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
+				F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				F98E007C2CFA1D6200A25515 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
-			preferredProjectObjectVersion = 77;
 			productRefGroup = F9C24CB02CF67884004094EC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -146,6 +230,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9A001012CFA400000000001 /* LightsOutApp.swift in Sources */,
+				F9A001032CFA400000000002 /* DisplaysViewModel.swift in Sources */,
+				F9A001052CFA400000000003 /* DisplayInfoModel.swift in Sources */,
+				F9A001072CFA400000000004 /* MenuBarView.swift in Sources */,
+				F9A001092CFA400000000005 /* DisplayListView.swift in Sources */,
+				F9A00110B2CFA400000000006 /* MenuBarHeaderView.swift in Sources */,
+				F9A00111B2CFA400000000007 /* StatusButtonView.swift in Sources */,
+				F9A00112B2CFA400000000008 /* DisplayDetailsView.swift in Sources */,
+				F9A00113B2CFA400000000009 /* LoadingView.swift in Sources */,
+				F9A00114B2CFA400000000010 /* UserPrompt.swift in Sources */,
+				F9A00115B2CFA400000000011 /* ContextMenuManager.swift in Sources */,
+				F9A00116B2CFA400000000012 /* ConfigurationError.swift in Sources */,
+				F9A00117B2CFA400000000013 /* ErrorHandler.swift in Sources */,
+				F9A00118B2CFA400000000014 /* DisplayArrangementCacheService.swift in Sources */,
+				F9A00119B2CFA400000000015 /* GammaUpdateService.swift in Sources */,
+				F9A00120B2CFA400000000016 /* BuiltInDisplayGuard.swift in Sources */,
+				F9A00121B2CFA400000000017 /* DisplayPersistenceService.swift in Sources */,
+				F9A00122B2CFA400000000018 /* DisplayConnectionMonitor.swift in Sources */,
+				F9A00123B2CFA400000000019 /* SleepWakeManager.swift in Sources */,
+				F9A00124B2CFA400000000020 /* DisplayAPIWrapper.swift in Sources */,
+				F9A00125B2CFA400000000021 /* DisplayRecoverySystem.swift in Sources */,
+				F9A00126B2CFA400000000022 /* EmergencyHotkeyManager.swift in Sources */,
+				F9A00127B2CFA400000000023 /* WeakRef.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,7 +312,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -262,7 +369,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -275,30 +382,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LightsOut/LightsOut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.1.0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LightsOut/Preview Content\"";
-				DEVELOPMENT_TEAM = W77DXU4YUN;
-				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LightsOut/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_LSBackgroundOnly = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Steelworks.LightsOut;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thuanpham.LightsOut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -308,27 +408,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LightsOut/LightsOut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.1.0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LightsOut/Preview Content\"";
-				DEVELOPMENT_TEAM = W77DXU4YUN;
-				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LightsOut/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_LSBackgroundOnly = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Steelworks.LightsOut;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thuanpham.LightsOut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -359,12 +453,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
+		F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern";
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
 			requirement = {
-				kind = exactVersion;
-				version = 1.1.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 		F98E007C2CFA1D6200A25515 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
@@ -380,7 +474,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		F98E00772CFA08FD00A25515 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
+			package = F98E00762CFA08FD00A25515 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
 		};
 		F98E007D2CFA1D6200A25515 /* Sparkle */ = {
