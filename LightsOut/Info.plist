@@ -14,5 +14,16 @@
 	<string>/m/TNJxWeS/g2eXKGIST0oOxigLT3rNmYDvNL0lul7Y=</string>
 	<key>SUScheduledCheckInterval</key>
 	<integer>3600</integer>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.lightsout.url</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>lightsout</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

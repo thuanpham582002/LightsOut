@@ -77,6 +77,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls where url.scheme == "lightsout" {
+            guard let button = statusItem?.button else { continue }
+            switch url.host {
+            case "toggle", nil:
+                togglePopover(button)
+            case "menu":
+                contextMenuManager.showContextMenu()
+            case "close":
+                if popover.isShown { popover.performClose(nil) }
+            default:
+                break
+            }
+        }
+    }
+
     deinit {
         if let monitor = eventMonitor {
             NSEvent.removeMonitor(monitor)
