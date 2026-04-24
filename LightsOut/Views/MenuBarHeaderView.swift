@@ -48,6 +48,10 @@ struct MenuBarHeader: View {
     @State private var randomText: String = texts.randomElement()!
     @EnvironmentObject var viewModel: DisplaysViewModel
     @State private var showResetPopup: Bool = false
+    @State private var showRecoveryPopup: Bool = false
+    @State private var showKickstartPopup: Bool = false
+    @State private var kickstartMessage: String = ""
+    @State private var kickstartSuccess: Bool = true
 
     var body: some View {
         HStack(alignment: .top) {
@@ -91,6 +95,40 @@ struct MenuBarHeader: View {
                             viewModel.resetAllDisplays()
                             showResetPopup = true
                         }
+
+                    Image(systemName: "wand.and.stars")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.orange)
+                        .onTapGesture {
+                            isLoading = true
+                            DispatchQueue.global(qos: .userInitiated).async {
+                                viewModel.forceRecovery()
+                                DispatchQueue.main.async {
+                                    isLoading = false
+                                    showRecoveryPopup = true
+                                }
+                            }
+                        }
+
+                    Image(systemName: "bolt.circle.fill")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.yellow)
+                        .onTapGesture {
+                            isLoading = true
+                            viewModel.restartWindowServer { success, error in
+                                isLoading = false
+                                kickstartSuccess = success
+                                kickstartMessage = success
+                                    ? "WindowServer restarted — displays re-detected."
+                                    : "Failed: \(error ?? "unknown error")"
+                                showKickstartPopup = true
+                                if success {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        viewModel.fetchDisplays()
+                                    }
+                                }
+                            }
+                        }
                 }
             }
         }
@@ -110,6 +148,43 @@ struct MenuBarHeader: View {
                             .onAppear {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                     showResetPopup = false
+                                }
+                            }
+                    }
+                }
+                if showRecoveryPopup {
+                    VStack {
+                        Spacer()
+                        Text("Force recovery applied — display state cleaned.")
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.orange.opacity(0.85)))
+                            .padding(.bottom, 20)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    showRecoveryPopup = false
+                                }
+                            }
+                    }
+                }
+                if showKickstartPopup {
+                    VStack {
+                        Spacer()
+                        Text(kickstartMessage)
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(kickstartSuccess
+                                          ? Color.yellow.opacity(0.9)
+                                          : Color.red.opacity(0.85))
+                            )
+                            .padding(.bottom, 20)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    showKickstartPopup = false
                                 }
                             }
                     }

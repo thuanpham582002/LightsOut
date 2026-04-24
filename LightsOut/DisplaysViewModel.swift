@@ -120,6 +120,59 @@ class DisplaysViewModel: ObservableObject {
         CGDisplayRestoreColorSyncSettings()
         CGRestorePermanentDisplayConfiguration()
     }
+
+    /// Nuclear recovery: asks the user for admin credentials, then restarts
+    /// WindowServer via launchctl. This forces macOS to re-enumerate all
+    /// physically connected displays. Use when a display has been soft-
+    /// disconnected and no longer appears in CGGetOnlineDisplayList.
+    /// Completion: (success, errorMessage?)
+    func restartWindowServer(completion: @escaping (Bool, String?) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let script = """
+            do shell script "launchctl kickstart -k system/com.apple.WindowServer" with administrator privileges
+            """
+            var errorInfo: NSDictionary?
+            let appleScript = NSAppleScript(source: script)
+            appleScript?.executeAndReturnError(&errorInfo)
+            DispatchQueue.main.async {
+                if let err = errorInfo, let msg = err[NSAppleScript.errorMessage] as? String {
+                    completion(false, msg)
+                } else {
+                    completion(true, nil)
+                }
+            }
+        }
+    }
+
+    /// Aggressive recovery: re-enables every online display ID (including
+    /// ones the app no longer tracks in memory) and restores system display
+    /// configuration. Use when a display was disabled but is no longer
+    /// visible in the UI to be toggled back manually.
+    func forceRecovery() {
+        var onlineCount: UInt32 = 0
+        CGGetOnlineDisplayList(0, nil, &onlineCount)
+        var onlineIDs = [CGDirectDisplayID](repeating: 0, count: Int(onlineCount))
+        CGGetOnlineDisplayList(onlineCount, &onlineIDs, &onlineCount)
+
+        var cid: CGDisplayConfigRef?
+        if CGBeginDisplayConfiguration(&cid) == .success, let config = cid {
+            for id in onlineIDs {
+                _ = CGSConfigureDisplayEnabled(config, id, true)
+                CGConfigureDisplayMirrorOfDisplay(config, id, kCGNullDirectDisplay)
+            }
+            CGCompleteDisplayConfiguration(config, .permanently)
+        }
+
+        for display in displays {
+            gammaService.restoreGamma(for: display)
+        }
+
+        CGDisplayRestoreColorSyncSettings()
+        CGRestorePermanentDisplayConfiguration()
+
+        displays.removeAll()
+        fetchDisplays()
+    }
     
     func unRegisterMirrors(display: DisplayInfo) {
         for mirror in display.mirroredTo {
