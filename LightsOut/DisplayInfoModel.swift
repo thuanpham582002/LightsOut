@@ -6,7 +6,7 @@
 import SwiftUI
 import CoreGraphics
 
-enum DisplayState {
+enum DisplayState: String, Codable {
     case mirrored
     case disconnected
     case pending

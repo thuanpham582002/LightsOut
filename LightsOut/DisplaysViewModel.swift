@@ -12,8 +12,10 @@ class DisplaysViewModel: ObservableObject {
     @Published var displays: [DisplayInfo] = []
     private var gammaService = GammaUpdateService()
     private var arrengementCache = DisplayArrangementCacheService()
+    private var stateStore = DisplayStateStore()
     
     init() {
+        displays = stateStore.load()
         fetchDisplays()
     }
     
@@ -25,10 +27,19 @@ class DisplaysViewModel: ObservableObject {
         CGGetActiveDisplayList(displayCount, &activeDisplays, &displayCount)
         
         var new_displays: Set<DisplayInfo> = Set()
+        let previousDisplaysByID = Dictionary(uniqueKeysWithValues: displays.map { ($0.id, $0) })
         
         let primaryDisplayID = CGMainDisplayID()
         
         new_displays = Set(activeDisplays.compactMap { displayID in
+            if let existingDisplay = previousDisplaysByID[displayID] {
+                existingDisplay.isPrimary = displayID == primaryDisplayID
+                if !existingDisplay.state.isOff() && existingDisplay.state != .pending {
+                    existingDisplay.state = .active
+                }
+                return existingDisplay
+            }
+
             var displayName = "Display \(displayID)"
             if let screen = NSScreen.screens.first(where: { $0.displayID == displayID }) {
                 displayName = screen.localizedName
@@ -50,18 +61,10 @@ class DisplaysViewModel: ObservableObject {
         }
         
         displays = Array(new_displays)
+        sortDisplays()
+        persistDisplays()
         
-        displays.sort {
-            if $0.isPrimary {
-                return true
-            }
-            if $1.isPrimary {
-                return false
-            }
-            return $0.id < $1.id
-        }
-        
-        try! arrengementCache.cache()
+        try? arrengementCache.cache()
     }
     
     func disconnectDisplay(display: DisplayInfo) throws(DisplayError) {
@@ -86,6 +89,7 @@ class DisplaysViewModel: ObservableObject {
         
         display.state = .disconnected
         unRegisterMirrors(display: display)
+        persistDisplays()
     }
 
     
@@ -100,6 +104,7 @@ class DisplaysViewModel: ObservableObject {
             throw DisplayError(msg: "Faild to apply a mirror-based disable to '\(display.name)'.")
         }
         unRegisterMirrors(display: display)
+        persistDisplays()
     }
     
     func turnOnDisplay(display: DisplayInfo) throws(DisplayError) {
@@ -119,6 +124,7 @@ class DisplaysViewModel: ObservableObject {
         }
         CGDisplayRestoreColorSyncSettings()
         CGRestorePermanentDisplayConfiguration()
+        persistDisplays()
     }
 
     /// Nuclear recovery: asks the user for admin credentials, then restarts
@@ -171,6 +177,7 @@ class DisplaysViewModel: ObservableObject {
         CGRestorePermanentDisplayConfiguration()
 
         displays.removeAll()
+        persistDisplays()
         fetchDisplays()
     }
     
@@ -178,6 +185,22 @@ class DisplaysViewModel: ObservableObject {
         for mirror in display.mirroredTo {
             mirror.state = .active
         }
+    }
+
+    private func sortDisplays() {
+        displays.sort {
+            if $0.isPrimary {
+                return true
+            }
+            if $1.isPrimary {
+                return false
+            }
+            return $0.id < $1.id
+        }
+    }
+
+    private func persistDisplays() {
+        stateStore.save(displays)
     }
     
 }
@@ -209,6 +232,7 @@ extension DisplaysViewModel {
         }
         
         display.state = .active
+        persistDisplays()
     }
     
     fileprivate func enableDisplay(display: DisplayInfo) throws(DisplayError) {
@@ -225,6 +249,7 @@ extension DisplaysViewModel {
         }
         
         display.state = .active
+        persistDisplays()
     }
 }
 

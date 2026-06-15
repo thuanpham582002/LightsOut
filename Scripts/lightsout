@@ -1,0 +1,65 @@
+#!/bin/bash
+# lightsout - command-line wrapper around the LightsOut URL scheme.
+#
+# Usage:
+#   lightsout list                 Show all displays (id, name, state, primary)
+#   lightsout disable <id|all>     Disable a display (soft-disconnect)
+#   lightsout mirror  <id|all>     Disable via mirror + zero gamma
+#   lightsout enable  <id|all>     Turn a display back on
+#   lightsout toggle  <id|all>     Toggle a display on/off
+#   lightsout reset                Re-enable all displays + restore config
+#   lightsout recover              Aggressive recovery for lost displays
+#   lightsout refresh              Re-scan displays
+#   lightsout menu | popover | close   UI controls
+#
+# Display ids come from `lightsout list`. Omit id or pass "all" to target every display.
+set -euo pipefail
+
+JSON="$HOME/Library/Containers/Steelworks.LightsOut/Data/lightsout-displays.json"
+
+open_url() { open "lightsout://$1"; }
+
+usage() { sed -n '/^# Usage:/,/^set -/p' "$0" | grep -v '^set -' | sed 's/^# \{0,1\}//'; }
+
+cmd="${1:-}"; arg="${2:-}"
+
+# build optional ?id= query
+id_query() { [ -n "$arg" ] && printf '?id=%s' "$arg" || printf ''; }
+
+case "$cmd" in
+    list)
+        open_url "list"
+        # wait briefly for the app to write the file
+        for _ in 1 2 3 4 5 6 7 8 9 10; do
+            [ -f "$JSON" ] && break
+            sleep 0.2
+        done
+        if [ ! -f "$JSON" ]; then
+            echo "No display data found (is LightsOut running?)." >&2
+            exit 1
+        fi
+        if command -v jq >/dev/null 2>&1; then
+            printf "%-5s %-30s %-13s %s\n" "ID" "NAME" "STATE" "PRIMARY"
+            jq -r '.[] | [.id, .name, .state, (if .isPrimary then "yes" else "" end)] | @tsv' "$JSON" \
+                | awk -F'\t' '{printf "%-5s %-30s %-13s %s\n", $1, $2, $3, $4}'
+        else
+            cat "$JSON"
+        fi
+        ;;
+    disable)      open_url "disconnect$(id_query)" ;;
+    mirror)       open_url "disable$(id_query)" ;;
+    enable)       open_url "enable$(id_query)" ;;
+    toggle)       open_url "toggle-display$(id_query)" ;;
+    reset)        open_url "reset" ;;
+    recover)      open_url "recover" ;;
+    refresh)      open_url "refresh" ;;
+    menu)         open_url "menu" ;;
+    popover)      open_url "toggle" ;;
+    close)        open_url "close" ;;
+    ""|-h|--help|help) usage ;;
+    *)
+        echo "Unknown command: $cmd" >&2
+        usage >&2
+        exit 1
+        ;;
+esac
