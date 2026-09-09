@@ -1,63 +1,63 @@
-//
-//  GammaUpdateService.swift
-//  BlackoutTest
-
 import CoreGraphics
-import SwiftUI
+import Foundation
 
-class GammaUpdateService {
-    @Published var originalGammaTables: [CGDirectDisplayID: (red: [CGGammaValue], green: [CGGammaValue], blue: [CGGammaValue])] = [:]
-    private var gammaUpdateTimers: [DisplayInfo: Timer] = [:]
-    
-    func setZeroGamma(for display: DisplayInfo) {
-        saveOriginalGamma(for: display.id)
-        applyZeroGamma(for: display)
+/// All calls run on the main thread. Recovery cancels every retry before restoring color.
+final class GammaUpdateService {
+    private var timers: [CGDirectDisplayID: Timer] = [:]
+    private let writeBlackout: (CGDirectDisplayID) -> Bool
+    private let restoreColor: () -> Void
+
+    init(writeBlackout: @escaping (CGDirectDisplayID) -> Bool = { id in
+        let zero = [CGGammaValue](repeating: 0, count: 256)
+        return CGSetDisplayTransferByTable(id, 256, zero, zero, zero) == .success
+    }, restoreColor: @escaping () -> Void = { CGDisplayRestoreColorSyncSettings() }) {
+        self.writeBlackout = writeBlackout
+        self.restoreColor = restoreColor
     }
-    
+
+    var canBlackout: ((CGDirectDisplayID) -> Bool)?
+    var onFailure: (() -> Void)?
+
+    func setZeroGamma(for display: DisplayInfo) throws(DisplayError) {
+        cancel(for: display.id)
+        guard applyBlackout(display.id) else {
+            throw DisplayError(msg: "Cannot safely darken '\(display.name)'.")
+        }
+        display.state = .mirrored
+        var remaining = 4
+        let timer = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self else { timer.invalidate(); return }
+            guard display.state == .mirrored, self.applyBlackout(display.id) else {
+                self.cancel(for: display.id)
+                self.onFailure?()
+                return
+            }
+            remaining -= 1
+            if remaining == 0 { self.cancel(for: display.id) }
+        }
+        timers[display.id] = timer
+        RunLoop.main.add(timer, forMode: .common)
+    }
+
+    private func applyBlackout(_ id: CGDirectDisplayID) -> Bool {
+        guard canBlackout?(id) == true else { return false }
+        return writeBlackout(id)
+    }
+
+    private func cancel(for id: CGDirectDisplayID) {
+        timers.removeValue(forKey: id)?.invalidate()
+    }
+
     func restoreGamma(for display: DisplayInfo) {
-        gammaUpdateTimers[display]?.invalidate()
-        gammaUpdateTimers[display] = nil
-        
-        if let originalTables = originalGammaTables[display.id] {
-            CGSetDisplayTransferByTable(display.id, UInt32(originalTables.red.count), originalTables.red, originalTables.green, originalTables.blue)
-        } else {
-            print("No original gamma table saved for display \(display.name).")
-        }
+        // ColorSync restoration is global; stop all pending writes first.
+        restoreAll()
     }
-    
-    private func saveOriginalGamma(for displayID: CGDirectDisplayID) {
-        if originalGammaTables[displayID] == nil {
-            var gammaTableSize: UInt32 = 256
-            CGGetDisplayTransferByTable(displayID, 0, nil, nil, nil, &gammaTableSize)
-            var redTable = [CGGammaValue](repeating: 0, count: Int(gammaTableSize))
-            var greenTable = [CGGammaValue](repeating: 0, count: Int(gammaTableSize))
-            var blueTable = [CGGammaValue](repeating: 0, count: Int(gammaTableSize))
-            CGGetDisplayTransferByTable(displayID, gammaTableSize, &redTable, &greenTable, &blueTable, &gammaTableSize)
-            originalGammaTables[displayID] = (red: redTable, green: greenTable, blue: blueTable)
-        }
+
+    func restoreAll() {
+        timers.values.forEach { $0.invalidate() }
+        timers.removeAll()
+        restoreColor()
     }
-    
-    private func applyZeroGamma(for display: DisplayInfo) {
-        let zeroTable = [CGGammaValue](repeating: 0, count: 256)
-        var runs = 0
-        
-        print(display.state)
-        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-            let result = CGSetDisplayTransferByTable(display.id, 256, zeroTable, zeroTable, zeroTable)
-            if result == .success {
-                print("Successfully applied zero gamma to display \(display.id) (application number \(runs + 1))")
-            }
-            
-            runs += 1
-            
-            if runs >= 5 {
-                print("Applied zero gamma to display \(display.id) \(runs) times")
-                timer.invalidate()
-                self?.gammaUpdateTimers[display] = nil
-                display.state = .mirrored
-            }
-        }
-        
-        gammaUpdateTimers[display] = timer
-    }
+
+    deinit { timers.values.forEach { $0.invalidate() } }
 }

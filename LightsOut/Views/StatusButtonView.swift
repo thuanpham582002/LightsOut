@@ -9,13 +9,15 @@ struct StatusButton: View {
     private var statusText: String {
         switch display.state {
         case .mirrored:
-            return "Mirrored"
+            return "Dimmed"
         case .disconnected:
             return "Disabled"
         case .active:
             return "Active"
         case .pending:
             return "Pending"
+        case .unavailable:
+            return "Retry"
         }
     }
     
@@ -29,6 +31,8 @@ struct StatusButton: View {
             return Color("AppGreen")
         case .pending:
             return Color("AppBlue")
+        case .unavailable:
+            return Color("AppRed")
         }
     }
     
@@ -53,6 +57,7 @@ struct StatusButton: View {
                 .foregroundColor(.white)
             }
         }
+        .help(display.statusMessage ?? "Toggle display")
         .onTapGesture {
             if display.state == .pending { return }
 
@@ -76,7 +81,6 @@ struct StatusButton: View {
             }
         } catch let error {
             errorHandler.handle(error: error) {
-                viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
                 viewModel.resetAllDisplays()
                 viewModel.fetchDisplays()
             }
@@ -94,7 +98,6 @@ struct StatusButton: View {
             }
         } catch let error {
             errorHandler.handle(error: error) {
-                viewModel.displays.remove(at: viewModel.displays.firstIndex(of: display)!)
                 viewModel.resetAllDisplays()
                 viewModel.fetchDisplays()
             }

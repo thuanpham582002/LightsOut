@@ -24,6 +24,7 @@ class DisplayArrangementCacheService {
     }
     
     func restore() throws {
+        guard let displayArrangement else { return }
         var configRef: CGDisplayConfigRef?
         let beginConfigError = CGBeginDisplayConfiguration(&configRef)
         guard beginConfigError == .success, let config = configRef else {
@@ -32,7 +33,8 @@ class DisplayArrangementCacheService {
             ])
         }
         
-        for (displayID, position) in displayArrangement!.positions {
+        for (displayID, position) in displayArrangement.positions {
+            guard CGDisplayIsOnline(displayID) != 0 else { continue }
             let moveError = CGConfigureDisplayOrigin(config, displayID, Int32(position.x), Int32(position.y))
             guard moveError == .success else {
                 CGCancelDisplayConfiguration(config)
@@ -42,7 +44,7 @@ class DisplayArrangementCacheService {
             }
         }
         
-        let completeConfigError = CGCompleteDisplayConfiguration(config, .permanently)
+        let completeConfigError = CGCompleteDisplayConfiguration(config, .forAppOnly)
         guard completeConfigError == .success else {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(completeConfigError.rawValue), userInfo: [
                 NSLocalizedDescriptionKey: "Failed to complete display configuration."

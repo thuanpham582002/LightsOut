@@ -11,9 +11,13 @@ final class DisplayStateStore {
         let name: String
         let state: DisplayState
         let isPrimary: Bool
+        let uuid: String?
+        let isBuiltIn: Bool?
+        let isManagedDisabled: Bool?
     }
 
     private let storageURL: URL
+    private var lastSavedData: Data?
 
     init(storageURL: URL = DisplayStateStore.defaultStorageURL) {
         self.storageURL = storageURL
@@ -26,13 +30,18 @@ final class DisplayStateStore {
         }
 
         return storedDisplays.map {
-            DisplayInfo(id: $0.id, name: $0.name, state: $0.state, isPrimary: $0.isPrimary)
+            let display = DisplayInfo(id: $0.id, name: $0.name, state: $0.state, isPrimary: $0.isPrimary,
+                                      uuid: $0.uuid, isBuiltIn: $0.isBuiltIn ?? false)
+            display.isManagedDisabled = $0.isManagedDisabled ?? ($0.state == .disconnected)
+            return display
         }
     }
 
-    func save(_ displays: [DisplayInfo]) {
+    @discardableResult
+    func save(_ displays: [DisplayInfo]) -> Bool {
         let storedDisplays = displays.map {
-            StoredDisplay(id: $0.id, name: $0.name, state: $0.state, isPrimary: $0.isPrimary)
+            StoredDisplay(id: $0.id, name: $0.name, state: $0.state, isPrimary: $0.isPrimary,
+                          uuid: $0.uuid, isBuiltIn: $0.isBuiltIn, isManagedDisabled: $0.isManagedDisabled)
         }
 
         do {
@@ -40,10 +49,16 @@ final class DisplayStateStore {
                 at: storageURL.deletingLastPathComponent(),
                 withIntermediateDirectories: true
             )
-            let data = try JSONEncoder().encode(storedDisplays)
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .sortedKeys
+            let data = try encoder.encode(storedDisplays)
+            if data == lastSavedData { return true }
             try data.write(to: storageURL, options: .atomic)
+            lastSavedData = data
+            return true
         } catch {
             print("Failed to persist display state: \(error)")
+            return false
         }
     }
 

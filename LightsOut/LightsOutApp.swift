@@ -17,11 +17,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     var popover: NSPopover!
     var eventMonitor: Any?
+    private var recoveryHotKey: RecoveryHotKey?
     let displaysViewModel = DisplaysViewModel()
     var updateController: SPUStandardUpdaterController!
     var contextMenuManager: ContextMenuManager!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        recoveryHotKey = RecoveryHotKey { [weak self] in self?.displaysViewModel.forceRecovery() }
         popover = NSPopover()
         popover.behavior = .applicationDefined
         
@@ -48,6 +50,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        #endif
         
         contextMenuManager = ContextMenuManager(updateController: updateController.updater, statusItem: statusItem)
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        displaysViewModel.forceRecovery(preservePreferences: true)
     }
 
     @objc func handleClick(_ sender: NSStatusBarButton) {
@@ -135,15 +141,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let stateString: String
             switch display.state {
             case .active:       stateString = "active"
-            case .mirrored:     stateString = "mirrored"
+            case .mirrored:     stateString = "off"
             case .disconnected: stateString = "disconnected"
             case .pending:      stateString = "pending"
+            case .unavailable:  stateString = "unavailable"
             }
             return [
                 "id": display.id,
                 "name": display.name,
                 "state": stateString,
-                "isPrimary": display.isPrimary
+                "isPrimary": display.isPrimary,
+                "uuid": display.uuid ?? "",
+                "statusMessage": display.statusMessage ?? "",
+                "preferredState": displaysViewModel.prefersOff(display) ? "off" : "on"
+                ,"mechanism": display.state == .mirrored ? "mirror-blackout"
+                    : (display.state == .disconnected ? "disconnect" : "none")
             ]
         }
 

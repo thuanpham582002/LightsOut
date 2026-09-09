@@ -14,6 +14,10 @@ struct DisplayDetails: View {
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                 .foregroundColor(.white)
 
+            if let message = display.statusMessage, display.state == .unavailable {
+                Text(message).font(.system(size: 10)).foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             if display.isPrimary {
                 Text("Primary Display")
                     .font(.system(size: 10, weight: .medium, design: .rounded))

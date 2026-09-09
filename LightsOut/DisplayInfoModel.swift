@@ -11,10 +11,11 @@ enum DisplayState: String, Codable {
     case disconnected
     case pending
     case active
+    case unavailable
     
     func isOff() -> Bool {
         switch self {
-        case .mirrored, .disconnected:
+        case .mirrored, .disconnected, .unavailable:
             return true
         default:
             return false
@@ -24,7 +25,11 @@ enum DisplayState: String, Codable {
 
 class DisplayInfo: ObservableObject, Identifiable, Hashable {
     let id: CGDirectDisplayID
-    let name: String
+    @Published var name: String
+    var uuid: String?
+    var isBuiltIn: Bool
+    var isManagedDisabled = false
+    @Published var statusMessage: String?
     var isPrimary: Bool
     @Published var state: DisplayState {
         didSet {
@@ -34,11 +39,14 @@ class DisplayInfo: ObservableObject, Identifiable, Hashable {
     var mirroredTo: [DisplayInfo] = []
     var mirrorSource: DisplayInfo?
 
-    init(id: CGDirectDisplayID, name: String, state: DisplayState, isPrimary: Bool) {
+    init(id: CGDirectDisplayID, name: String, state: DisplayState, isPrimary: Bool,
+         uuid: String? = nil, isBuiltIn: Bool = false) {
         self.id = id
         self.name = name
         self.state = state
         self.isPrimary = isPrimary
+        self.uuid = uuid
+        self.isBuiltIn = isBuiltIn
     }
     
     func hash(into hasher: inout Hasher) {
